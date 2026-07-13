@@ -490,36 +490,81 @@ export default function JourneyPage() {
   const [lallaOutfit, setLallaOutfit] = useState<string>('shringaar');
   const [openDrawer, setOpenDrawer] = useState<KandaSection | null>(null);
 
+  // Split view state
+  const [currentView, setCurrentView] = useState<'lifeline' | 'mandir'>('lifeline');
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [activeMobileChapterIndex, setActiveMobileChapterIndex] = useState<number>(0);
+
   const mainContainerRef = useRef<HTMLDivElement>(null);
   const timelinePathRef = useRef<HTMLDivElement>(null);
   const glowLineRef = useRef<HTMLDivElement>(null);
 
   const closeDrawer = useCallback(() => setOpenDrawer(null), []);
 
+  // Screen size listener to toggle mobile mode
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const visibleKandas = (() => {
+    if (currentView === 'lifeline') {
+      if (isMobile) {
+        return [timelineData[activeMobileChapterIndex]];
+      } else {
+        return timelineData.slice(0, 7);
+      }
+    } else {
+      return [timelineData[7]];
+    }
+  })();
+
+  const handleViewChange = (view: 'lifeline' | 'mandir') => {
+    setCurrentView(view);
+    if (view === 'mandir') {
+      setActiveKanda('ayodhya-mandir');
+    } else {
+      setActiveKanda(timelineData[activeMobileChapterIndex].id);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Lenis + GSAP ScrollTriggers
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const lenis = new Lenis({
-      duration: 1.4,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-    } as any);
+    const isMobileViewport = window.innerWidth < 768;
+    let lenis: Lenis | null = null;
+    let rafId: number;
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
+    // Optimize: Only initialize Lenis on desktop
+    if (!isMobileViewport) {
+      lenis = new Lenis({
+        duration: 1.4,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        smoothTouch: false,
+      } as any);
+
+      function raf(time: number) {
+        lenis?.raf(time);
+        rafId = requestAnimationFrame(raf);
+      }
+      rafId = requestAnimationFrame(raf);
+
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => lenis?.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
     }
-    requestAnimationFrame(raf);
 
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
-
-    // Glow line scroll animation
-    if (glowLineRef.current && timelinePathRef.current) {
+    // Glow line scroll animation (only desktop/scroll mode)
+    if (!isMobileViewport && glowLineRef.current && timelinePathRef.current) {
       gsap.fromTo(
         glowLineRef.current,
         { scaleY: 0 },
@@ -536,81 +581,96 @@ export default function JourneyPage() {
       );
     }
 
-    // Card reveal and focus spotlight animation
+    // Card reveal and focus spotlight animation (desktop only to prevent mobile lag)
     const cards = document.querySelectorAll('.timeline-event-card');
     const isLightTheme = theme === 'light';
     const minOpacity = isLightTheme ? 0.65 : 0.25;
     const baseBorderColor = isLightTheme ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.04)';
     const focusedTitleColor = isLightTheme ? '#1c1814' : '#ffffff';
     const unfocusedTitleColor = isLightTheme ? '#2b251f' : '#f4e8d3';
+    const isDesktop = window.innerWidth >= 1024;
 
-    cards.forEach((card) => {
-      const accent = card.getAttribute('data-accent') || '#d05c43';
-      const title = card.querySelector('h4');
-      
-      // Initialize starting state: hidden, smaller, offset down
-      gsap.set(card, { opacity: minOpacity, scale: 0.93, y: 40 });
+    if (isDesktop) {
+      cards.forEach((card) => {
+        const accent = card.getAttribute('data-accent') || '#d05c43';
+        const title = card.querySelector('h4');
+        
+        // Initialize starting state: hidden, smaller, offset down
+        gsap.set(card, { opacity: minOpacity, scale: 0.93, y: 40 });
 
-      // Create scroll-linked spotlight timeline
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 92%',
-          end: 'bottom 8%',
-          scrub: 1.2,
-        }
+        // Create scroll-linked spotlight timeline
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 92%',
+            end: 'bottom 8%',
+            scrub: 1.2,
+          }
+        });
+
+        tl.to(card, {
+          opacity: 1,
+          scale: 1.03,
+          y: 0,
+          boxShadow: isLightTheme
+            ? `0 20px 45px -10px rgba(0, 0, 0, 0.08), 0 0 25px ${accent}15`
+            : `0 20px 50px -10px ${accent}35, 0 0 30px ${accent}25`,
+          borderColor: `${accent}45`,
+          duration: 0.5,
+          ease: 'power2.out'
+        })
+        .to(title, {
+          color: focusedTitleColor,
+          textShadow: isLightTheme ? 'none' : `0 0 12px ${accent}70, 0 0 24px ${accent}30`,
+          duration: 0.5,
+          ease: 'power2.out'
+        }, 0)
+        .to(card, {
+          opacity: minOpacity,
+          scale: 0.93,
+          boxShadow: 'none',
+          borderColor: baseBorderColor,
+          duration: 0.5,
+          ease: 'power2.in'
+        })
+        .to(title, {
+          color: unfocusedTitleColor,
+          textShadow: 'none',
+          duration: 0.5,
+          ease: 'power2.in'
+        }, 0.5);
       });
-
-      tl.to(card, {
-        opacity: 1,
-        scale: 1.03,
-        y: 0,
-        boxShadow: isLightTheme
-          ? `0 20px 45px -10px rgba(0, 0, 0, 0.08), 0 0 25px ${accent}15`
-          : `0 20px 50px -10px ${accent}35, 0 0 30px ${accent}25`,
-        borderColor: `${accent}45`,
-        duration: 0.5,
-        ease: 'power2.out'
-      })
-      .to(title, {
-        color: focusedTitleColor,
-        textShadow: isLightTheme ? 'none' : `0 0 12px ${accent}70, 0 0 24px ${accent}30`,
-        duration: 0.5,
-        ease: 'power2.out'
-      }, 0)
-      .to(card, {
-        opacity: minOpacity,
-        scale: 0.93,
-        boxShadow: 'none',
-        borderColor: baseBorderColor,
-        duration: 0.5,
-        ease: 'power2.in'
-      })
-      .to(title, {
-        color: unfocusedTitleColor,
-        textShadow: 'none',
-        duration: 0.5,
-        ease: 'power2.in'
-      }, 0.5);
-    });
-
-    // Active Kanda tracker
-    const sections = document.querySelectorAll('.kanda-section');
-    sections.forEach((section) => {
-      ScrollTrigger.create({
-        trigger: section,
-        start: 'top center',
-        end: 'bottom center',
-        onEnter: () => setActiveKanda(section.getAttribute('data-kanda-id') || 'bala'),
-        onEnterBack: () => setActiveKanda(section.getAttribute('data-kanda-id') || 'bala'),
+    } else {
+      // Clean up inline styles on mobile to run transitions at native speed
+      cards.forEach((card) => {
+        gsap.set(card, { clearProps: 'all' });
+        const title = card.querySelector('h4');
+        if (title) gsap.set(title, { clearProps: 'all' });
       });
-    });
+    }
+
+    // Active Kanda tracker (only on desktop/scroll mode)
+    if (!isMobileViewport) {
+      const sections = document.querySelectorAll('.kanda-section');
+      sections.forEach((section) => {
+        ScrollTrigger.create({
+          trigger: section,
+          start: 'top center',
+          end: 'bottom center',
+          onEnter: () => setActiveKanda(section.getAttribute('data-kanda-id') || 'bala'),
+          onEnterBack: () => setActiveKanda(section.getAttribute('data-kanda-id') || 'bala'),
+        });
+      });
+    }
 
     return () => {
-      lenis.destroy();
+      if (lenis) {
+        lenis.destroy();
+        cancelAnimationFrame(rafId);
+      }
       ScrollTrigger.getAll().forEach((st) => st.kill());
     };
-  }, [theme]);
+  }, [theme, currentView, activeMobileChapterIndex]);
 
   const isLight = theme === 'light';
 
@@ -634,44 +694,49 @@ export default function JourneyPage() {
       <div className={`absolute inset-0 bg-[linear-gradient(to_right,rgba(${isLight ? '43,37,31,0.015' : '244,232,211,0.02'})_1px,transparent_1px),linear-gradient(to_bottom,rgba(${isLight ? '43,37,31,0.015' : '244,232,211,0.02'})_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none`} />
 
       {/* Left Nav — Kanda tracker */}
-      <div className="hidden lg:flex fixed left-12 top-1/2 -translate-y-1/2 z-40 flex-col gap-5 items-start font-body text-[10px] tracking-[0.25em] uppercase font-semibold">
-        {timelineData.map((k) => (
-          <button
-            key={k.id}
-            className={`flex items-center gap-3 transition-all duration-500 cursor-pointer bg-transparent border-0 text-left ${
-              activeKanda === k.id ? 'translate-x-2' : 'hover:translate-x-1'
-            }`}
-            style={{ color: activeKanda === k.id ? k.accentHex : isLight ? 'rgba(43,37,31,0.35)' : 'rgba(244,232,211,0.25)' }}
-            onClick={() => {
-              const el = document.getElementById(`section-${k.id}`);
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            <span
-              className="w-1.5 h-1.5 rounded-full transition-all duration-500 shrink-0"
-              style={activeKanda === k.id
-                ? { background: k.accentHex, boxShadow: `0 0 8px ${k.accentHex}` }
-                : { background: isLight ? 'rgba(43,37,31,0.2)' : 'rgba(244,232,211,0.15)' }
-              }
-            />
-            <span className="whitespace-nowrap">{k.title.replace(' Kanda', '')}</span>
-          </button>
-        ))}
-      </div>
+      {currentView === 'lifeline' && (
+        <div className="hidden lg:flex fixed left-12 top-1/2 -translate-y-1/2 z-40 flex-col gap-5 items-start font-body text-[10px] tracking-[0.25em] uppercase font-semibold">
+          {timelineData.slice(0, 7).map((k) => (
+            <button
+              key={k.id}
+              className={`flex items-center gap-3 transition-all duration-500 cursor-pointer bg-transparent border-0 text-left ${
+                activeKanda === k.id ? 'translate-x-2' : 'hover:translate-x-1'
+              }`}
+              style={{ color: activeKanda === k.id ? k.accentHex : isLight ? 'rgba(43,37,31,0.35)' : 'rgba(244,232,211,0.25)' }}
+              onClick={() => {
+                const el = document.getElementById(`section-${k.id}`);
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full transition-all duration-500 shrink-0"
+                style={activeKanda === k.id
+                  ? { background: k.accentHex, boxShadow: `0 0 8px ${k.accentHex}` }
+                  : { background: isLight ? 'rgba(43,37,31,0.2)' : 'rgba(244,232,211,0.15)' }
+                }
+              />
+              <span className="whitespace-nowrap">{k.title.replace(' Kanda', '')}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto lg:pl-64 xl:pl-72 flex flex-col items-center">
 
         {/* Editorial Heading */}
-        <div className="text-center mb-24 flex flex-col items-center gap-4 relative z-10">
+        <div className="text-center mb-20 flex flex-col items-center gap-4 relative z-10">
           <span className="font-devanagari text-[#ff7900] text-sm tracking-[0.3em] uppercase font-bold drop-shadow-[0_2px_8px_rgba(255,121,0,0.35)]">
-            श्रीमद् रामायणम्
+            {currentView === 'lifeline' ? 'श्रीमद् रामायणम्' : 'श्रीराम जन्मभूमि'}
           </span>
-          <h1 className={`font-display text-[2.5rem] md:text-[4rem] ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'} tracking-[0.05em] uppercase leading-none drop-shadow-[0_2px_20px_rgba(217,164,65,0.45)]`}>
-            The Eternal Path
+          <h1 className={`font-display text-[2.2rem] md:text-[4rem] ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'} tracking-[0.05em] uppercase leading-none drop-shadow-[0_2px_20px_rgba(217,164,65,0.45)]`}>
+            {currentView === 'lifeline' ? 'The Eternal Path' : 'Divine Homecoming'}
           </h1>
-          <p className={`font-body text-xs md:text-sm ${isLight ? 'text-[#3a3229]/65' : 'text-[#f4e8d3]/50'} max-w-[420px] uppercase tracking-[0.2em] leading-relaxed`}>
-            Scroll to follow Lord Ram's journey of absolute Dharma — all Seven Kandas
+          <p className={`font-body text-xs md:text-sm ${isLight ? 'text-[#3a3229]/65' : 'text-[#f4e8d3]/50'} max-w-[450px] uppercase tracking-[0.2em] leading-relaxed px-4`}>
+            {currentView === 'lifeline' 
+              ? (isMobile ? "Follow Lord Ram's journey of absolute Dharma — stage by stage" : "Scroll to follow Lord Ram's journey of absolute Dharma — all Seven Kandas")
+              : "Explore the architectural marvel, sacred ghats, and child-deity of modern Ayodhya"
+            }
           </p>
           <div className="w-[100px] h-[1px] bg-gradient-to-r from-transparent via-[#ff5e00]/50 to-transparent mt-4" />
         </div>
@@ -679,7 +744,7 @@ export default function JourneyPage() {
         {/* Timeline Track */}
         <div ref={timelinePathRef} className="relative w-full flex flex-col gap-32">
           {/* Vertical path line */}
-          <div className={`absolute left-4 md:left-1/2 md:-translate-x-1/2 top-4 bottom-4 w-[2px] ${isLight ? 'bg-black/[0.08]' : 'bg-white/[0.08]'} pointer-events-none z-0`}>
+          <div className={`absolute left-4 md:left-1/2 md:-translate-x-1/2 top-4 bottom-4 w-[2px] ${isLight ? 'bg-black/[0.08]' : 'bg-white/[0.08]'} pointer-events-none z-0 ${isMobile && currentView === 'lifeline' ? 'hidden' : 'block'}`}>
             <div
               ref={glowLineRef}
               className="absolute top-0 left-0 right-0 h-full bg-gradient-to-b from-[#d05c43] via-[#e9c46a] to-[#d05c43] origin-top will-change-transform"
@@ -688,7 +753,7 @@ export default function JourneyPage() {
           </div>
 
           {/* Sections */}
-          {timelineData.map((kanda: KandaSection) => (
+          {visibleKandas.map((kanda: KandaSection) => (
             <section
               key={kanda.id}
               id={`section-${kanda.id}`}
@@ -763,13 +828,15 @@ export default function JourneyPage() {
                       }`}
                     >
                       {/* Timeline Node */}
-                      <div
-                        className="absolute left-4 md:left-1/2 md:-translate-x-1/2 w-4 h-4 rounded-full bg-[#0a0907] border-2 z-20 pointer-events-none shadow-[0_0_10px_rgba(217,164,65,0.5)]"
-                        style={{ borderColor: kanda.accentHex }}
-                      />
+                      {!(isMobile && currentView === 'lifeline') && (
+                        <div
+                          className="absolute left-4 md:left-1/2 md:-translate-x-1/2 w-4 h-4 rounded-full bg-[#0a0907] border-2 z-20 pointer-events-none shadow-[0_0_10px_rgba(217,164,65,0.5)]"
+                          style={{ borderColor: kanda.accentHex }}
+                        />
+                      )}
 
                       {/* Event Card */}
-                      <div className="w-full md:w-[45%] pl-10 md:pl-0">
+                      <div className={`w-full ${isMobile && currentView === 'lifeline' ? 'md:w-full pl-0' : 'md:w-[45%] pl-10 md:pl-0'}`}>
                         <div
                           data-accent={kanda.accentHex}
                           className="timeline-event-card premium-modern-card flex flex-col gap-0 pointer-events-auto select-text overflow-hidden"
@@ -979,6 +1046,65 @@ export default function JourneyPage() {
                   );
                 })}
               </div>
+
+              {/* Mobile Interactive Navigation Controls */}
+              {isMobile && currentView === 'lifeline' && (
+                <div className="w-full flex flex-col items-center gap-4 mt-12 pb-8">
+                  {/* Progress Indicator */}
+                  <div className={`text-[10px] font-body uppercase tracking-[0.2em] px-4 py-1.5 rounded-full ${
+                    isLight ? 'bg-black/[0.03] text-black/60' : 'bg-white/[0.03] text-[#f4e8d3]/60'
+                  }`}>
+                    Chapter {activeMobileChapterIndex + 1} of 7: <span className="font-bold text-[#ff7900]">{kanda.title}</span>
+                  </div>
+
+                  <div className="flex w-full gap-3 justify-center max-w-[420px]">
+                    {/* Back Button */}
+                    {activeMobileChapterIndex > 0 && (
+                      <button
+                        onClick={() => {
+                          const newIdx = activeMobileChapterIndex - 1;
+                          setActiveMobileChapterIndex(newIdx);
+                          setActiveKanda(timelineData[newIdx].id);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className={`flex-1 py-3 rounded-xl font-body text-[10px] uppercase tracking-widest font-bold border transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
+                          isLight
+                            ? 'bg-black/[0.015] border-black/10 text-black hover:bg-black/[0.04]'
+                            : 'bg-white/[0.015] border-white/10 text-[#f4e8d3] hover:bg-white/[0.04]'
+                        }`}
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        <span>Go Back</span>
+                      </button>
+                    )}
+
+                    {/* Next Button */}
+                    <button
+                      onClick={() => {
+                        if (activeMobileChapterIndex < 6) {
+                          const newIdx = activeMobileChapterIndex + 1;
+                          setActiveMobileChapterIndex(newIdx);
+                          setActiveKanda(timelineData[newIdx].id);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        } else {
+                          handleViewChange('mandir');
+                        }
+                      }}
+                      className="flex-1 py-3 rounded-xl font-body text-[10px] uppercase tracking-widest font-bold text-white transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer bg-gradient-to-r from-[#ff5e00] to-[#ff7900] border-0 hover:shadow-[0_0_20px_rgba(255,94,0,0.4)]"
+                      style={{
+                        boxShadow: '0 4px 15px rgba(255,94,0,0.25)'
+                      }}
+                    >
+                      <span>{activeMobileChapterIndex < 6 ? 'Complete & Next' : 'Enter Ram Mandir'}</span>
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              )}
             </section>
           ))}
         </div>
@@ -1006,6 +1132,67 @@ export default function JourneyPage() {
           </svg>
         )}
       </button>
+
+      {/* iOS Frosted Glass Footer Dock */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[45] pointer-events-auto w-[90%] max-w-sm">
+        <div className={`relative px-4 py-2 rounded-full border backdrop-blur-xl transition-all duration-500 shadow-[0_15px_45px_rgba(0,0,0,0.5)] flex items-center justify-between gap-1 ${
+          isLight 
+            ? 'bg-white/75 border-black/10 text-[#2b251f]' 
+            : 'bg-[#0d0c0a]/65 border-white/10 text-[#f4e8d3]'
+        }`}>
+          {/* Tab 1: Lifeline */}
+          <button
+            onClick={() => handleViewChange('lifeline')}
+            className={`relative flex-1 py-2 px-3 rounded-full font-body text-[9px] md:text-[10px] uppercase tracking-wider font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-300 ${
+              currentView === 'lifeline'
+                ? 'text-[#ff7900] z-10'
+                : isLight ? 'text-black/55 hover:text-black' : 'text-[#f4e8d3]/60 hover:text-[#f4e8d3]'
+            }`}
+          >
+            {currentView === 'lifeline' && (
+              <motion.div
+                layoutId="activeDockTab"
+                className={`absolute inset-0 rounded-full z-[-1] border ${
+                  isLight 
+                    ? 'bg-black/[0.04] border-black/10' 
+                    : 'bg-white/[0.06] border-white/10'
+                }`}
+                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+              />
+            )}
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <span className="whitespace-nowrap">Lifeline</span>
+          </button>
+
+          {/* Tab 2: Ram Mandir */}
+          <button
+            onClick={() => handleViewChange('mandir')}
+            className={`relative flex-1 py-2 px-3 rounded-full font-body text-[9px] md:text-[10px] uppercase tracking-wider font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-300 ${
+              currentView === 'mandir'
+                ? 'text-[#ff7900] z-10'
+                : isLight ? 'text-black/55 hover:text-black' : 'text-[#f4e8d3]/60 hover:text-[#f4e8d3]'
+            }`}
+          >
+            {currentView === 'mandir' && (
+              <motion.div
+                layoutId="activeDockTab"
+                className={`absolute inset-0 rounded-full z-[-1] border ${
+                  isLight 
+                    ? 'bg-black/[0.04] border-black/10' 
+                    : 'bg-white/[0.06] border-white/10'
+                }`}
+                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+              />
+            )}
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <span className="whitespace-nowrap">Ram Mandir</span>
+          </button>
+        </div>
+      </div>
 
       {/* Kanda Drawer */}
       <KandaDrawer kanda={openDrawer} onClose={closeDrawer} theme={theme} />
