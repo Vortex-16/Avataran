@@ -835,6 +835,12 @@ export const timelineData: KandaSection[] = [
       { image: '/assets/ram_lalla_lotus.png', caption: 'Ram Lalla on the divine Lotus Pedestal' },
       { image: '/assets/ram_lalla_yellow.png', caption: 'Ram Lalla in Swarna Yellow robes' },
       { image: '/assets/ram_lalla_abhisheka_milk.png', caption: 'Ksheera Abhishekam at dawn' },
+      { image: '/assets/ram_lalla_abhisheka_paste.png', caption: 'Chandan Abhishekam of Ram Lalla' },
+      { image: '/assets/ram_lalla_blue.png', caption: 'Ram Lalla in Neela Peetambara blue robes' },
+      { image: '/assets/ram_lalla_closeup.png', caption: 'Close up of the divine child-god smile' },
+      { image: '/assets/ram_lalla_cream.png', caption: 'Ram Lalla in Swarna Cream robes' },
+      { image: '/assets/ram_lalla_magenta.png', caption: 'Ram Lalla in Magenta Shringaar' },
+      { image: '/assets/ram_lalla_pink.png', caption: 'Ram Lalla in Taruna Pink robes' },
     ],
     facts: [
       'The Ram Mandir was built in the Nagara style using pink sandstone from Rajasthan.',

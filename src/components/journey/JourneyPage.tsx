@@ -8,6 +8,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import DynamicIslandPlayer from './DynamicIslandPlayer';
+import PixelTransition from './PixelTransition';
 
 // ─── Helper ────────────────────────────────────────────────
 function clamp(n: number, lo: number, hi: number) { return Math.min(Math.max(n, lo), hi); }
@@ -22,9 +23,20 @@ interface DrawerProps {
 function KandaDrawer({ kanda, onClose, theme }: DrawerProps) {
   const [tab, setTab] = useState<'events' | 'characters' | 'locations' | 'weapons' | 'dialogues' | 'gallery' | 'facts' | 'references'>('events');
   const [gallery, setGallery] = useState<{ image: string; caption: string } | null>(null);
+  const [displayGallery, setDisplayGallery] = useState<{ image: string; caption: string }[]>([]);
   const tabContentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { setTab('events'); }, [kanda?.id]);
+  useEffect(() => { 
+    setTab('events'); 
+    if (kanda) {
+      if (kanda.id === 'ayodhya-mandir') {
+        const shuffled = [...kanda.gallery].sort(() => Math.random() - 0.5);
+        setDisplayGallery(shuffled);
+      } else {
+        setDisplayGallery(kanda.gallery);
+      }
+    }
+  }, [kanda?.id, kanda]);
 
   useEffect(() => {
     if (tabContentRef.current) {
@@ -390,7 +402,7 @@ function KandaDrawer({ kanda, onClose, theme }: DrawerProps) {
               {/* ── Gallery Tab ── */}
               {tab === 'gallery' && (
                 <div className="grid grid-cols-2 gap-3">
-                  {kanda.gallery.map((g, i) => (
+                  {displayGallery.map((g, i) => (
                     <button
                       key={i}
                       onClick={() => setGallery(g)}
@@ -501,6 +513,13 @@ export default function JourneyPage() {
 
   const closeDrawer = useCallback(() => setOpenDrawer(null), []);
 
+  const [showResumePrompt, setShowResumePrompt] = useState<boolean>(false);
+  const [savedProgress, setSavedProgress] = useState<{
+    view: 'lifeline' | 'mandir';
+    mobileIndex: number;
+    kandaId: string;
+  } | null>(null);
+
   // Screen size listener to toggle mobile mode
   useEffect(() => {
     const checkMobile = () => {
@@ -510,6 +529,53 @@ export default function JourneyPage() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  const [scrollProgress, setScrollProgress] = useState<number>(0);
+
+  // Track page scroll progress for mobile indicator
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const progress = (window.scrollY / totalHeight) * 100;
+        setScrollProgress(progress);
+      } else {
+        setScrollProgress(0);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [currentView, activeMobileChapterIndex]);
+
+  // Check saved progress on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedView = localStorage.getItem('avataran_current_view') as 'lifeline' | 'mandir' | null;
+      const savedIndexStr = localStorage.getItem('avataran_mobile_chapter_index');
+      const savedKandaId = localStorage.getItem('avataran_active_kanda_id');
+
+      if (savedView && savedKandaId) {
+        const savedIndex = savedIndexStr ? parseInt(savedIndexStr, 10) : 0;
+        setSavedProgress({
+          view: savedView,
+          mobileIndex: savedIndex,
+          kandaId: savedKandaId
+        });
+        setShowResumePrompt(true);
+      }
+    }
+  }, []);
+
+  // Autosave progress when states change
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !showResumePrompt) {
+      localStorage.setItem('avataran_current_view', currentView);
+      localStorage.setItem('avataran_mobile_chapter_index', String(activeMobileChapterIndex));
+      localStorage.setItem('avataran_active_kanda_id', activeKanda);
+    }
+  }, [currentView, activeMobileChapterIndex, activeKanda, showResumePrompt]);
 
   const visibleKandas = (() => {
     if (currentView === 'lifeline') {
@@ -694,32 +760,41 @@ export default function JourneyPage() {
       <div className={`absolute inset-0 bg-[linear-gradient(to_right,rgba(${isLight ? '43,37,31,0.015' : '244,232,211,0.02'})_1px,transparent_1px),linear-gradient(to_bottom,rgba(${isLight ? '43,37,31,0.015' : '244,232,211,0.02'})_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none`} />
 
       {/* Left Nav — Kanda tracker */}
-      {currentView === 'lifeline' && (
-        <div className="hidden lg:flex fixed left-12 top-1/2 -translate-y-1/2 z-40 flex-col gap-5 items-start font-body text-[10px] tracking-[0.25em] uppercase font-semibold">
-          {timelineData.slice(0, 7).map((k) => (
-            <button
-              key={k.id}
-              className={`flex items-center gap-3 transition-all duration-500 cursor-pointer bg-transparent border-0 text-left ${
-                activeKanda === k.id ? 'translate-x-2' : 'hover:translate-x-1'
-              }`}
-              style={{ color: activeKanda === k.id ? k.accentHex : isLight ? 'rgba(43,37,31,0.35)' : 'rgba(244,232,211,0.25)' }}
-              onClick={() => {
-                const el = document.getElementById(`section-${k.id}`);
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              <span
-                className="w-1.5 h-1.5 rounded-full transition-all duration-500 shrink-0"
-                style={activeKanda === k.id
-                  ? { background: k.accentHex, boxShadow: `0 0 8px ${k.accentHex}` }
-                  : { background: isLight ? 'rgba(43,37,31,0.2)' : 'rgba(244,232,211,0.15)' }
-                }
-              />
-              <span className="whitespace-nowrap">{k.title.replace(' Kanda', '')}</span>
-            </button>
-          ))}
-        </div>
-      )}
+      {currentView === 'lifeline' && (() => {
+        const kandaOrder = ['bala', 'ayodhya', 'aranya', 'kishkindha', 'sundara', 'yuddha', 'uttara'];
+        const activeIdx = kandaOrder.indexOf(activeKanda);
+
+        return (
+          <div className="hidden lg:flex fixed left-12 top-1/2 -translate-y-1/2 z-40 flex-col gap-5 items-start font-body text-[10px] tracking-[0.25em] uppercase font-semibold">
+            {timelineData.slice(0, 7).map((k, idx) => {
+              const isCompletedOrActive = idx <= activeIdx;
+
+              return (
+                <button
+                  key={k.id}
+                  className={`flex items-center gap-3 transition-all duration-500 cursor-pointer bg-transparent border-0 text-left ${
+                    activeKanda === k.id ? 'translate-x-2' : 'hover:translate-x-1'
+                  }`}
+                  style={{ color: activeKanda === k.id ? k.accentHex : isLight ? 'rgba(43,37,31,0.35)' : 'rgba(244,232,211,0.25)' }}
+                  onClick={() => {
+                    const el = document.getElementById(`section-${k.id}`);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  <span
+                    className="w-1.5 h-1.5 rounded-full transition-all duration-500 shrink-0"
+                    style={isCompletedOrActive
+                      ? { background: k.accentHex, boxShadow: activeKanda === k.id ? `0 0 8px ${k.accentHex}` : 'none' }
+                      : { background: isLight ? 'rgba(43,37,31,0.2)' : 'rgba(244,232,211,0.15)' }
+                    }
+                  />
+                  <span className="whitespace-nowrap">{k.title.replace(' Kanda', '')}</span>
+                </button>
+              );
+            })}
+          </div>
+        );
+      })()}
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto lg:pl-64 xl:pl-72 flex flex-col items-center">
@@ -744,7 +819,7 @@ export default function JourneyPage() {
         {/* Timeline Track */}
         <div ref={timelinePathRef} className="relative w-full flex flex-col gap-32">
           {/* Vertical path line */}
-          <div className={`absolute left-4 md:left-1/2 md:-translate-x-1/2 top-4 bottom-4 w-[2px] ${isLight ? 'bg-black/[0.08]' : 'bg-white/[0.08]'} pointer-events-none z-0 ${isMobile && currentView === 'lifeline' ? 'hidden' : 'block'}`}>
+          <div className={`absolute left-4 md:left-1/2 md:-translate-x-1/2 top-4 bottom-4 w-[2px] ${isLight ? 'bg-black/[0.08]' : 'bg-white/[0.08]'} pointer-events-none z-0 ${isMobile ? 'hidden' : 'block'}`}>
             <div
               ref={glowLineRef}
               className="absolute top-0 left-0 right-0 h-full bg-gradient-to-b from-[#d05c43] via-[#e9c46a] to-[#d05c43] origin-top will-change-transform"
@@ -828,7 +903,7 @@ export default function JourneyPage() {
                       }`}
                     >
                       {/* Timeline Node */}
-                      {!(isMobile && currentView === 'lifeline') && (
+                      {!isMobile && (
                         <div
                           className="absolute left-4 md:left-1/2 md:-translate-x-1/2 w-4 h-4 rounded-full bg-[#0a0907] border-2 z-20 pointer-events-none shadow-[0_0_10px_rgba(217,164,65,0.5)]"
                           style={{ borderColor: kanda.accentHex }}
@@ -836,7 +911,7 @@ export default function JourneyPage() {
                       )}
 
                       {/* Event Card */}
-                      <div className={`w-full ${isMobile && currentView === 'lifeline' ? 'md:w-full pl-0' : 'md:w-[45%] pl-10 md:pl-0'}`}>
+                      <div className={`w-full ${isMobile ? 'md:w-full pl-0' : 'md:w-[45%] pl-10 md:pl-0'}`}>
                         <div
                           data-accent={kanda.accentHex}
                           className="timeline-event-card premium-modern-card flex flex-col gap-0 pointer-events-auto select-text overflow-hidden"
@@ -1002,13 +1077,15 @@ export default function JourneyPage() {
                             {event.id === 'garbhagriha' && (
                               <div className="mt-2 flex flex-col gap-4">
                                 <div className={`relative w-full aspect-[4/5] rounded-xl border ${isLight ? 'border-black/5 bg-black/10' : 'border-white/5 bg-black/40'} overflow-hidden shadow-inner`}>
-                                  <img
+                                  <PixelTransition
                                     src={`/assets/ram_lalla_${
                                       lallaOutfit === 'milk' ? 'abhisheka_milk' : lallaOutfit
                                     }.png`}
                                     alt={`Ram Lalla ${lallaOutfit}`}
-                                    className="w-full h-full object-cover transition-all duration-700 ease-out"
-                                    key={lallaOutfit}
+                                    gridSize={12}
+                                    pixelColor={isLight ? '#d9a441' : '#ff7900'}
+                                    animationStepDuration={0.35}
+                                    className="w-full h-full"
                                   />
                                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/20 pointer-events-none" />
                                   <span className={`absolute bottom-3 left-1/2 -translate-x-1/2 font-display text-[9px] tracking-widest text-[#d9a441] uppercase bg-black/45 px-3 py-1 rounded-full border ${isLight ? 'border-black/10' : 'border-white/5'} backdrop-blur-sm whitespace-nowrap`}>
@@ -1199,6 +1276,146 @@ export default function JourneyPage() {
 
       {/* Mobile Dynamic Island Player */}
       <DynamicIslandPlayer />
+
+      {/* Resume Progress Dialog */}
+      <AnimatePresence>
+        {showResumePrompt && savedProgress && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className={`w-full max-w-md p-6 rounded-2xl border flex flex-col gap-6 items-center text-center shadow-[0_25px_60px_rgba(0,0,0,0.8)] ${
+                isLight
+                  ? 'bg-[#faf7f2]/95 border-black/10 text-black'
+                  : 'bg-[#0d0c0a]/90 border-white/10 text-[#f4e8d3]'
+              }`}
+            >
+              <div className="flex flex-col gap-2">
+                <span className="font-devanagari text-[#ff7900] text-sm uppercase tracking-widest font-bold">
+                  शुभ आगमनम् (Welcome Back)
+                </span>
+                <h3 className="font-display text-xl md:text-2xl uppercase tracking-wider">
+                  Resume Journey?
+                </h3>
+                <p className={`font-body text-xs ${isLight ? 'text-black/60' : 'text-[#f4e8d3]/60'} max-w-[320px] mt-2`}>
+                  Would you like to continue from where you left off or start a fresh exploration?
+                </p>
+              </div>
+
+              {/* Saved details card */}
+              <div className={`w-full p-4 rounded-xl border ${
+                isLight ? 'bg-black/[0.02] border-black/5' : 'bg-white/[0.02] border-white/5'
+              } flex flex-col gap-1 items-center`}>
+                <span className={`font-body text-[9px] uppercase tracking-widest ${isLight ? 'text-black/40' : 'text-[#f4e8d3]/40'}`}>
+                  Saved Location
+                </span>
+                <span className="font-display text-sm uppercase text-[#ff9933] font-bold">
+                  {savedProgress.view === 'lifeline'
+                    ? timelineData.find(k => k.id === savedProgress.kandaId)?.title || 'Bala Kanda'
+                    : 'Shri Ram Mandir'}
+                </span>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex w-full gap-3">
+                <button
+                  onClick={() => {
+                    // Start Fresh
+                    if (typeof window !== 'undefined') {
+                      localStorage.clear();
+                    }
+                    setShowResumePrompt(false);
+                  }}
+                  className={`flex-1 py-3 rounded-xl font-body text-[10px] uppercase tracking-widest font-bold border transition-all duration-300 cursor-pointer ${
+                    isLight
+                      ? 'bg-black/[0.015] border-black/10 text-black hover:bg-black/[0.04]'
+                      : 'bg-white/[0.015] border-white/10 text-[#f4e8d3] hover:bg-white/[0.04]'
+                  }`}
+                >
+                  Start Fresh
+                </button>
+
+                <button
+                  onClick={() => {
+                    // Resume
+                    setCurrentView(savedProgress.view);
+                    setActiveMobileChapterIndex(savedProgress.mobileIndex);
+                    setActiveKanda(savedProgress.kandaId);
+                    
+                    // If desktop and lifeline, try to scroll to the kanda section
+                    setTimeout(() => {
+                      const el = document.getElementById(`section-${savedProgress.kandaId}`);
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }, 300);
+
+                    setShowResumePrompt(false);
+                  }}
+                  className="flex-1 py-3 rounded-xl font-body text-[10px] uppercase tracking-widest font-bold text-white transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer bg-gradient-to-r from-[#ff5e00] to-[#ff7900] border-0 hover:shadow-[0_0_20px_rgba(255,94,0,0.4)]"
+                  style={{
+                    boxShadow: '0 4px 15px rgba(255,94,0,0.25)'
+                  }}
+                >
+                  Continue
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Circular Progress Ring */}
+      {isMobile && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className={`fixed bottom-24 right-6 z-[45] p-1 rounded-full border backdrop-blur-md transition-all duration-300 shadow-md flex items-center justify-center pointer-events-auto cursor-pointer focus:outline-none ${
+            isLight
+              ? 'bg-white/80 border-black/10 text-[#ff7900] hover:bg-white'
+              : 'bg-[#14110b]/80 border-[#d05c43]/20 text-[#ff7900] hover:border-[#d05c43]/50'
+          }`}
+          aria-label="Scroll to top and progress"
+          style={{ width: '36px', height: '36px' }}
+        >
+          {/* SVG Circular Ring */}
+          <svg className="absolute inset-0 w-full h-full -rotate-90 p-0.5" viewBox="0 0 36 36">
+            {/* Background circle */}
+            <path
+              className={isLight ? 'text-black/[0.05]' : 'text-white/[0.05]'}
+              stroke="currentColor"
+              strokeWidth="4"
+              fill="none"
+              d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"
+            />
+            {/* Foreground circle (progress indicator) */}
+            <path
+              stroke="currentColor"
+              strokeWidth="4"
+              strokeDasharray={`${scrollProgress}, 100`}
+              strokeLinecap="round"
+              fill="none"
+              d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"
+              style={{ 
+                color: '#ff7900',
+                transition: 'stroke-dasharray 300ms cubic-bezier(0.16, 1, 0.3, 1)'
+              }}
+            />
+          </svg>
+
+          {/* Up arrow icon */}
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }

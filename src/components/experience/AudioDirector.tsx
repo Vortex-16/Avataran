@@ -59,6 +59,22 @@ export default function AudioDirector() {
   const initAudio = () => {
     if (audioCtxRef.current) return;
 
+    // Clean up any existing global audio elements to prevent overlapping sound
+    if (typeof window !== 'undefined') {
+      if ((window as any).avataran_music_audio) {
+        try {
+          (window as any).avataran_music_audio.pause();
+          (window as any).avataran_music_audio.src = "";
+        } catch (e) {}
+      }
+      if ((window as any).avataran_narration_audio) {
+        try {
+          (window as any).avataran_narration_audio.pause();
+          (window as any).avataran_narration_audio.src = "";
+        } catch (e) {}
+      }
+    }
+
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
     const ctx = new AudioContextClass();
     audioCtxRef.current = ctx;
@@ -100,6 +116,9 @@ export default function AudioDirector() {
     narrationAudioRef.current = narrationAudio;
     narrationSourceRef.current = narrationSource;
     narrationGainRef.current = narrationGain;
+    if (typeof window !== 'undefined') {
+      (window as any).avataran_narration_audio = narrationAudio;
+    }
 
     // Bus 3: Procedural noise generator (Wind/Waves)
     const bufferSize = 2 * ctx.sampleRate;
@@ -169,6 +188,10 @@ export default function AudioDirector() {
         narrationAudioRef.current.pause();
         narrationAudioRef.current.src = "";
         narrationAudioRef.current = null;
+      }
+      if (typeof window !== 'undefined') {
+        (window as any).avataran_music_audio = null;
+        (window as any).avataran_narration_audio = null;
       }
     };
   }, []);
