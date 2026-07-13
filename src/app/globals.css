@@ -1,0 +1,403 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Montserrat:wght@300;400;500;600&family=Noto+Sans+Devanagari:wght@300;400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Colors - sampled from actual assets */
+  --avataran-void:        #0a0907;   /* deepest background */
+  --avataran-charcoal:    #14110b;   /* primary dark background */
+  --avataran-indigo-dusk: #1b1821;   /* Ram's tonal shadow */
+  --avataran-forest-dusk: #0e130a;   /* forest scenes */
+  --avataran-ocean-night: #0c1a21;   /* ocean scenes */
+  --avataran-sandstone:   #7a5c3e;   /* mid-tone stonework */
+  --avataran-ivory:       #f4e8d3;   /* primary light text */
+
+  /* Accents */
+  --avataran-gold:        #d9a441;   /* antique gold - signals/active states */
+  --avataran-gold-bright: #fde498;   /* highlight gold */
+  --avataran-saffron:     #c4703a;   /* warmth accents */
+  --avataran-maroon:      #6b2430;   /* Sita accents / danger */
+  --avataran-bhagwa:      #ff5e00;   /* sacred bhagwa orange */
+  --avataran-bhagwa-glow: rgba(255, 94, 0, 0.25);
+
+  /* Functional */
+  --avataran-ocean-blue:  #4d84a8;
+  --avataran-focus-ring:  var(--avataran-gold-bright);
+
+  /* Fonts */
+  --font-display: 'Cinzel', serif;
+  --font-body:    'Montserrat', sans-serif;
+  --font-devanagari: 'Noto Sans Devanagari', sans-serif;
+
+  /* Typography scale */
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.9375rem; /* 15px */
+  --text-base: 1.125rem;  /* 18px */
+  --text-lg:   1.5rem;    /* 24px */
+  --text-xl:   2.25rem;   /* 36px */
+  --text-2xl:  3.5rem;    /* 56px */
+  --text-3xl:  5.5rem;    /* 88px */
+
+  --leading-tight:  1.15;
+  --leading-reading: 1.7;
+  --tracking-cinematic: 0.15em;
+
+  /* Spacing */
+  --space-1: 0.5rem;   /* 8px */
+  --space-2: 1rem;     /* 16px */
+  --space-3: 1.5rem;   /* 24px */
+  --space-4: 2.5rem;   /* 40px */
+  --space-5: 4rem;     /* 64px */
+  --space-6: 6.5rem;   /* 104px */
+  --space-7: 10rem;    /* 160px */
+
+  --content-max-width: 42rem; /* 672px */
+}
+
+/* Base resets */
+html, body {
+  background-color: var(--avataran-void);
+  color: var(--avataran-ivory);
+  font-family: var(--font-body);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Hide standard scrollbar */
+  -webkit-font-smoothing: antialiased;
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari */
+}
+
+/* Typography Utility Classes */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-devanagari {
+  font-family: var(--font-devanagari);
+}
+
+/* Custom premium components */
+.avataran-button {
+  position: relative;
+  padding: 0.875rem 2rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(244, 232, 211, 0.05), rgba(217, 164, 65, 0.1), rgba(244, 232, 211, 0.05));
+  background-size: 200% 100%;
+  border: 1px solid rgba(217, 164, 65, 0.25);
+  color: var(--avataran-ivory);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  letter-spacing: 0.02em;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition: border-color 0.4s ease, transform 0.3s ease, box-shadow 0.4s ease, filter 0.3s ease;
+  animation: liquid-flow 8s linear infinite;
+}
+
+@keyframes liquid-flow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.avataran-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(244, 232, 211, 0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.avataran-button:hover {
+  border-color: rgba(217, 164, 65, 0.65);
+  background-color: rgba(244, 232, 211, 0.12);
+  transform: scale(1.02) translateY(-1px);
+}
+
+.avataran-button:focus-visible {
+  box-shadow: 0 0 0 2px var(--avataran-focus-ring);
+}
+
+.avataran-button--primary {
+  border-color: rgba(253, 228, 152, 0.6);
+  box-shadow: 0 0 24px rgba(217, 164, 65, 0.15);
+}
+
+.avataran-button--primary:hover {
+  border-color: rgba(253, 228, 152, 0.95);
+  box-shadow: 0 0 32px rgba(217, 164, 65, 0.35);
+}
+
+/* Editorial layout constraints */
+.narrative-column {
+  max-width: var(--content-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
+  line-height: var(--leading-reading);
+  font-size: var(--text-base);
+}
+
+/* Unifying grade filter for images */
+.avataran-image-grade {
+  filter: saturate(0.94) contrast(1.03) sepia(0.04);
+}
+
+/* Glassmorphism containers */
+.glass-panel {
+  background: rgba(20, 17, 11, 0.65);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(244, 232, 211, 0.08);
+  border-radius: 4px;
+}
+
+/* Custom styles for accessibility and utilities */
+.skip-to-content {
+  position: absolute;
+  top: -100px;
+  left: 20px;
+  background: var(--avataran-gold);
+  color: var(--avataran-void);
+  padding: var(--space-2) var(--space-3);
+  z-index: 9999;
+  border-radius: 4px;
+  transition: top 0.2s ease;
+}
+
+.skip-to-content:focus {
+  top: 20px;
+}
+
+/* Premium Modern Bhagwa Card Layout */
+.premium-modern-card {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(26, 20, 15, 0.85) 0%, rgba(18, 14, 11, 0.9) 100%);
+  backdrop-filter: blur(24px) saturate(170%);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  border: 1px solid rgba(255, 94, 0, 0.2);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.7), 0 0 20px -5px rgba(255, 94, 0, 0.1);
+  overflow: hidden;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.premium-modern-card:hover {
+  border-color: rgba(255, 94, 0, 0.45);
+  box-shadow: 0 15px 45px -5px rgba(0, 0, 0, 0.8), 0 0 30px -2px rgba(255, 94, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Background image blending wrapper */
+.premium-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.15;
+  mix-blend-mode: color-dodge;
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.premium-modern-card:hover .premium-card-bg {
+  transform: scale(1.05);
+  opacity: 0.22;
+}
+
+/* Radial saffron/bhagwa glow behind text */
+.premium-card-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 25%, rgba(255, 94, 0, 0.15) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Content wrapper */
+.premium-card-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Fine Classical Corner Brackets */
+.premium-card-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: rgba(255, 94, 0, 0.4);
+  border-style: solid;
+  z-index: 3;
+  pointer-events: none;
+  transition: border-color 0.4s ease, transform 0.4s ease;
+}
+
+.premium-modern-card:hover .premium-card-corner {
+  border-color: var(--avataran-bhagwa);
+}
+
+.premium-card-corner-tl {
+  top: 8px;
+  left: 8px;
+  border-width: 2px 0 0 2px;
+}
+.premium-modern-card:hover .premium-card-corner-tl {
+  transform: translate(-2px, -2px);
+}
+
+.premium-card-corner-tr {
+  top: 8px;
+  right: 8px;
+  border-width: 2px 2px 0 0;
+}
+.premium-modern-card:hover .premium-card-corner-tr {
+  transform: translate(2px, -2px);
+}
+
+.premium-card-corner-bl {
+  bottom: 8px;
+  left: 8px;
+  border-width: 0 0 2px 2px;
+}
+.premium-modern-card:hover .premium-card-corner-bl {
+  transform: translate(-2px, 2px);
+}
+
+.premium-card-corner-br {
+  bottom: 8px;
+  right: 8px;
+  border-width: 0 2px 2px 0;
+}
+.premium-modern-card:hover .premium-card-corner-br {
+  transform: translate(2px, 2px);
+}
+
+/* Liquid flow button Bhagwa/Gold overrides */
+.avataran-button {
+  background: linear-gradient(90deg, rgba(255, 94, 0, 0.1), rgba(217, 164, 65, 0.15), rgba(255, 94, 0, 0.1));
+  background-size: 200% 100%;
+  border: 1px solid rgba(255, 94, 0, 0.3);
+}
+
+.avataran-button:hover {
+  border-color: rgba(255, 94, 0, 0.8);
+  background-color: rgba(255, 94, 0, 0.2);
+}
+
+.avataran-button--primary {
+  border-color: rgba(255, 120, 0, 0.6);
+  box-shadow: 0 0 20px rgba(255, 94, 0, 0.15);
+}
+
+.avataran-button--primary:hover {
+  border-color: rgba(255, 120, 0, 0.95);
+  box-shadow: 0 0 28px rgba(255, 94, 0, 0.35);
+}
+
+/* Floating Diya drifting animation for New Ayodhya Saryu River */
+@keyframes diya-drift {
+  0% {
+    transform: translateY(0) scale(0.6) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-240px) scale(1) rotate(15deg);
+    opacity: 0;
+  }
+}
+
+.animate-diya-drift {
+  animation: diya-drift 8s linear infinite;
+  will-change: transform, opacity;
+}
+
+/* Premium Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(20, 18, 15, 0.5);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(208, 92, 67, 0.6) 0%, rgba(184, 149, 82, 0.6) 100%);
+  border-radius: 8px;
+  border: 1px solid rgba(20, 18, 15, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(208, 92, 67, 0.95) 0%, rgba(184, 149, 82, 0.95) 100%);
+}
+
+/* Firefox scrollbar support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(208, 92, 67, 0.6) rgba(20, 18, 15, 0.5);
+}
+
+/* Light Theme Overrides */
+.light-theme .premium-modern-card {
+  background: linear-gradient(135deg, rgba(254, 252, 248, 0.82) 0%, rgba(245, 238, 226, 0.88) 100%) !important;
+  border-color: rgba(208, 92, 67, 0.12) !important;
+  box-shadow: 0 15px 40px -10px rgba(43, 37, 31, 0.08), 0 0 20px -5px rgba(208, 92, 67, 0.03) !important;
+}
+
+.light-theme .premium-modern-card:hover {
+  border-color: rgba(208, 92, 67, 0.3) !important;
+  box-shadow: 0 20px 50px -5px rgba(43, 37, 31, 0.12), 0 0 30px -2px rgba(208, 92, 67, 0.12) !important;
+}
+
+.light-theme .premium-card-glow {
+  background: radial-gradient(circle at 50% 25%, rgba(208, 92, 67, 0.06) 0%, transparent 65%) !important;
+}
+
+.light-theme .premium-card-corner {
+  border-color: rgba(208, 92, 67, 0.22) !important;
+}
+
+.light-theme::-webkit-scrollbar-track,
+.light-theme *::-webkit-scrollbar-track {
+  background: rgba(245, 238, 226, 0.6) !important;
+}
+
+.light-theme::-webkit-scrollbar-thumb,
+.light-theme *::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(208, 92, 67, 0.35) 0%, rgba(184, 149, 82, 0.35) 100%) !important;
+}
+
+.light-theme::-webkit-scrollbar-thumb:hover,
+.light-theme *::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(208, 92, 67, 0.7) 0%, rgba(184, 149, 82, 0.7) 100%) !important;
+}
+
+.light-theme * {
+  scrollbar-color: rgba(208, 92, 67, 0.35) rgba(245, 238, 226, 0.6) !important;
+}
+
