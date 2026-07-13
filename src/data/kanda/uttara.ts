@@ -1,0 +1,118 @@
+// ============================================================
+//  AVATARAN — Uttara Kanda Data (Kanda 7 of 7)
+//  Source: Valmiki Ramayana, Uttara Kanda (Sargas 1–111)
+//  The epilogue — Ram Rajya, Sita's exile, and the final return.
+// ============================================================
+import type { KandaSection } from '@/data/types';
+
+export const uttaraKanda: KandaSection = {
+  id: 'uttara',
+  title: 'Uttara Kanda',
+  subtitle: 'The Final Testament',
+  description: 'The epilogue of the Ramayana. Ram Rajya is established — an era of absolute peace and justice. Yet Ram faces his most painful sacrifice: the exile of Sita. She raises Luv and Kush in Valmiki\'s ashram. The final reunion ends in Sita\'s Bhoomi Pariksha and Ram\'s Jal Samadhi — the completion of the avatar.',
+  themeColor: 'from-[#7a6b57] to-[#b19f86]',
+  accentHex: '#7a6b57',
+  sargas: 111,
+  slokaCount: 3296,
+  contentWarning: 'This Kanda includes the painful exile of Sita. Multiple philosophical traditions interpret this as a divine cosmic leela (play) rather than actual suffering. Presented here with full contextual sensitivity.',
+  sloka: 'लोकाः समस्ताः सुखिनो भवन्तु।',
+  slokaTranslation: 'May all beings in all the worlds be happy, peaceful, and free.',
+  heroImage: '/assets/seq_coronation_announced.png',
+  backgroundImage: '/assets/ayodhya_gate_bg.png',
+  characters: [
+    { name: 'Ram', role: 'King & Avatar', status: 'transformed', portrait: '/assets/character_ram.png', description: 'Rules as the ideal king, then makes the most painful sacrifice — exiling Sita. Returns to Vishnu at the Sarayu.' },
+    { name: 'Sita', role: 'Divine Mother', status: 'transformed', portrait: '/assets/character_sita.png', description: 'Born from Earth, returns to Earth. Her final Bhoomi Pariksha is an act of supreme self-determination.' },
+    { name: 'Luv', role: 'Prince', status: 'active', portrait: '/assets/character_luv_kush.png', description: 'Ram\'s first-born son raised by Sita in Valmiki\'s ashram. A warrior-poet who learns the Ramayana from Valmiki.' },
+    { name: 'Kush', role: 'Prince', status: 'active', portrait: '/assets/character_luv_kush.png', description: 'Ram\'s twin son who captures the Ashwamedha horse and defeats the entire royal army.' },
+    { name: 'Valmiki', role: 'Sage & Poet', status: 'active', portrait: '/assets/character_valmiki.png', description: 'Author of the Ramayana. Shelters Sita, raises Luv and Kush, and presents them to Ram at court.' },
+  ],
+  locations: [
+    { name: 'Valmiki\'s Ashram (Bithoor)', description: 'The forest hermitage where Sita lives in exile and gives birth to Luv and Kush.', realWorld: 'Bithoor, near Kanpur, Uttar Pradesh', image: '/assets/forest_threshold_bg.png' },
+    { name: 'Sarayu River, Ayodhya', description: 'The sacred river where Ram performs his final Jal Samadhi, completing the avatar mission.', realWorld: 'Sarayu River, Ayodhya, Uttar Pradesh', image: '/assets/ayodhya_gate_bg.png' },
+  ],
+  weapons: [],
+  dialogues: [
+    { speaker: 'Sita', sanskrit: 'यथाहमावनस्य मनसाऽपि न चिन्तये। तथा मे माधवी देवी विवरं दातुमर्हति॥', translation: 'As I have never thought of any man other than Ram even in my heart, may the Earth goddess receive me.', context: 'Sita\'s final declaration before the earth opens and Bhoomi Devi takes her back.' },
+  ],
+  gallery: [
+    { image: '/assets/seq_coronation_announced.png', caption: 'Ram Rajya — the age of perfect governance' },
+    { image: '/assets/character_luv_kush.png', caption: 'Luv and Kush, the warrior-poet princes' },
+    { image: '/assets/character_valmiki.png', caption: 'Valmiki teaches Luv and Kush the Ramayana' },
+    { image: '/assets/ayodhya_gate_bg.png', caption: 'The Sarayu River — where Ram\'s journey ends' },
+  ],
+  facts: [
+    'Ram Rajya is described as a rule where no subject dies young, disease is absent, and rain comes on time.',
+    'Luv and Kush sang the full Ramayana at Ram\'s court over multiple days, not knowing it was their father\'s story.',
+    'Sita\'s Bhoomi Pariksha differs from the Agni Pariksha — she chose to return to her origin, not prove herself again.',
+    'Ram entered the Sarayu with his brothers and thousands of citizens — all returning to their divine forms.',
+    'Valmiki composed the Ramayana while Ram\'s events were still unfolding.',
+  ],
+  references: [
+    { name: 'Valmiki Ramayana — Uttara Kanda', detail: 'The last and most debated Kanda — some scholars consider it a later addition.' },
+    { name: 'Ramcharitmanas (Tulsidas)', detail: 'Tulsidas ends with the coronation and does not include the Sita exile narrative.' },
+    { name: 'Adhyatma Ramayana', detail: 'Frames Uttara Kanda events as divine cosmic play (Leela) rather than actual suffering.' },
+  ],
+  quizQuestions: [
+    { id: 'uttara-q1', kandaId: 'uttara', question: 'What is "Ram Rajya" described as?', options: ['A military empire', 'A reign of perfect justice where no one suffers untimely death, disease, or sorrow', 'A theocratic state', 'A democracy'], correctIndex: 1, explanation: 'Ram Rajya is described as an era of absolute justice: no one dies young, no disease, no drought, rains come on time, no poverty, no injustice. Every subject feels personally heard.', difficulty: 'easy' },
+    { id: 'uttara-q2', kandaId: 'uttara', question: 'Why did Ram exile Sita despite knowing her purity?', options: ['He stopped loving her', 'A washerman questioned Sita\'s purity, and Ram as king felt bound by public opinion above personal love', 'The gods demanded it', 'Valmiki advised it'], correctIndex: 1, explanation: 'A washerman said he could not take back his wife who had stayed away as he was not Ram who accepts women who lived in another man\'s house. Ram, bound by his duty to the throne above personal love, sent Sita away.', difficulty: 'medium' },
+    { id: 'uttara-q3', kandaId: 'uttara', question: 'Where did Sita live after her second exile?', options: ['In the forest alone', 'In Valmiki\'s ashram at Bithoor', 'In Lanka with Vibhishana', 'In Janaka\'s palace'], correctIndex: 1, explanation: 'Sita took shelter in the ashram of Sage Valmiki near Bithoor (close to modern Kanpur), where she gave birth to and raised her twins Luv and Kush.', difficulty: 'easy' },
+    { id: 'uttara-q4', kandaId: 'uttara', question: 'How did Luv and Kush first encounter Ram?', options: ['At Valmiki\'s ashram', 'They captured Ram\'s Ashwamedha sacrificial horse and defeated his entire army', 'At a swayamvara', 'Ram visited them secretly'], correctIndex: 1, explanation: 'Luv and Kush captured the horse of Ram\'s Ashwamedha Yagna and single-handedly defeated the entire royal army that came to retrieve it. This led to their dramatic revelation as Ram\'s sons.', difficulty: 'medium' },
+    { id: 'uttara-q5', kandaId: 'uttara', question: 'What song did Luv and Kush sing at Ram\'s court?', options: ['The Vishnu Sahasranama', 'The complete Ramayana — not knowing it was their own father\'s story', 'The Sundara Kanda alone', 'Vedic hymns'], correctIndex: 1, explanation: 'Valmiki sent Luv and Kush to recite the Ramayana at Ram\'s court during the Ashwamedha. They sang the entire epic over multiple days before audiences realized they were Ram\'s own sons.', difficulty: 'medium' },
+    { id: 'uttara-q6', kandaId: 'uttara', question: 'What was the Bhoomi Pariksha (Earth Test)?', options: ['Sita was tested by fire again', 'Sita called upon Mother Earth and the ground opened to receive her, returning her to her origin', 'Sita was tested by water', 'Sita was placed in a garden to prove her purity'], correctIndex: 1, explanation: 'Sita declared her eternal faithfulness to Ram and called upon her mother Bhoomi Devi. The earth opened and Bhoomi Devi, seated on a divine throne, drew Sita into her embrace — Sita returned to her origin.', difficulty: 'easy' },
+    { id: 'uttara-q7', kandaId: 'uttara', question: 'What was Ram\'s final act in his avatar mission?', options: ['He flew to Vaikuntha alone', 'He walked into the Sarayu River (Jal Samadhi) with his brothers and thousands of citizens, all returning to their divine forms', 'He ascended on Garuda', 'He merged into a divine flame'], correctIndex: 1, explanation: 'Ram, his brothers, and thousands of devoted citizens walked into the sacred Sarayu River. This Jal Samadhi marked the completion of the Vishnu avatar mission and their return to eternal divine forms.', difficulty: 'medium' },
+    { id: 'uttara-q8', kandaId: 'uttara', question: 'What is unique about Valmiki\'s composition of the Ramayana?', options: ['It was written centuries after the events', 'Valmiki composed it while the events were still unfolding — an unprecedented act of divine inspiration', 'It was dictated by Brahma', 'It was a collaboration of 100 sages'], correctIndex: 1, explanation: 'Uniquely, Valmiki is said to have composed the Ramayana (and taught it to Luv and Kush) while Ram\'s story was still happening in real time — through divine vision.', difficulty: 'hard' },
+    { id: 'uttara-q9', kandaId: 'uttara', question: 'What was the Ashwamedha Yagna?', options: ['A fire ritual for rain', 'A royal horse sacrifice for establishing sovereignty over all kingdoms', 'A yagna to beget sons', 'A ritual for peace'], correctIndex: 1, explanation: 'The Ashwamedha (horse sacrifice) was the supreme royal ceremony — a sacrificial horse was released to wander freely for a year, and any kingdom that stopped it had to fight. Ram performed it to establish Ram Rajya\'s universal sovereignty.', difficulty: 'medium' },
+    { id: 'uttara-q10', kandaId: 'uttara', question: 'What is the famous final verse of the Uttara Kanda?', options: ['Ram alone is truth', 'Loka samasta sukhino bhavantu — May all beings everywhere be happy', 'Sita found peace in earth', 'Dharma is eternal'], correctIndex: 1, explanation: '"Loka samasta sukhino bhavantu" (May all beings in all worlds be happy) is the closing prayer of the Ramayana — the ultimate blessing Ram Rajya sought to bring to all creation.', difficulty: 'easy' },
+  ],
+  featuredVerses: [
+    { id: 'uttara-1-1', sarga: 1, shloka: 1, devanagari: 'लोकाः समस्ताः सुखिनो भवन्तु।', translation: 'May all beings in all worlds be happy, peaceful, and free from suffering.', speaker: 'Valmiki', tags: ['dharma', 'joy', 'wisdom'], isFamous: true, commentary: 'The final closing prayer of the entire Ramayana — the ultimate goal of Ram Rajya.' },
+    { id: 'uttara-97-15', sarga: 97, shloka: 15, devanagari: 'यथाहमावनस्य मनसाऽपि न चिन्तये। तथा मे माधवी देवी विवरं दातुमर्हति॥', translation: 'As I have never in my heart thought of any man other than Ram, may the Earth Goddess receive me into her embrace.', speaker: 'Sita', tags: ['devotion', 'love', 'courage'], isFamous: true, commentary: 'Sita\'s final declaration — the most powerful assertion of feminine self-determination in all of Sanskrit literature.' },
+    { id: 'uttara-40-19', sarga: 40, shloka: 19, devanagari: 'रामो रामो रामो मे गतिरव्यया।', translation: 'Ram, Ram, Ram — he is my eternal refuge.', speaker: 'Sita', tags: ['devotion', 'love'], isFamous: true },
+    { id: 'uttara-106-29', sarga: 106, shloka: 29, devanagari: 'सर्वे भवन्तु सुखिनः। सर्वे सन्तु निरामयाः।', translation: 'May all be happy. May all be free from illness.', speaker: 'Valmiki', tags: ['dharma', 'joy', 'wisdom'], isFamous: true },
+  ],
+  events: [
+    {
+      id: 'ram-rajya',
+      title: 'Ram Rajya — The Golden Era',
+      subtitle: 'When Justice Was the Only Law',
+      location: 'Kingdom of Ayodhya',
+      description: 'Ram is crowned King and establishes Ram Rajya — perfect justice, no child dies before its parents, no disease spreads, rains are plentiful, sorrow does not exist. Every subject feels personally heard by the king.',
+      characters: ['Ram', 'Sita', 'Lakshmana', 'Bharata', 'Shatrughna'],
+      media: { hero: '/assets/seq_coronation_announced.png', background: '/assets/ayodhya_gate_bg.png' },
+      turning: true,
+      quote: 'Ram Rajya was not the rule of a king — it was the rule of conscience.',
+    },
+    {
+      id: 'sita-exile',
+      title: 'Sita\'s Second Exile',
+      subtitle: 'The Weight of the Crown',
+      location: 'Valmiki\'s Ashram, Bithoor',
+      description: 'A washerman questions Sita\'s purity. Ram, bound by his duty to the throne above personal love, sends Lakshmana to leave Sita near Valmiki\'s ashram. Sita, pregnant, is sheltered by Valmiki.',
+      characters: ['Sita', 'Valmiki', 'Ram', 'Lakshmana'],
+      media: { hero: '/assets/character_valmiki.png', background: '/assets/forest_threshold_bg.png' },
+      turning: true,
+      quote: 'The greatest sacrifice is not giving your life — it is giving what you love most.',
+    },
+    {
+      id: 'luv-kush-story',
+      title: 'Luv-Kush: The Warrior Poets',
+      subtitle: 'The Sons Who Did Not Know Their Father',
+      location: 'Valmiki\'s Ashram & Ayodhya Court',
+      description: 'Sita gives birth to twins Luv and Kush who grow up as fierce warriors and devotional poets. They capture Ram\'s Ashwamedha sacrificial horse, defeat his entire army, and recite the Ramayana before Ram\'s court — not knowing they are singing their father\'s story.',
+      characters: ['Luv', 'Kush', 'Sita', 'Valmiki', 'Ram'],
+      media: { hero: '/assets/character_luv_kush.png', background: '/assets/forest_threshold_bg.png' },
+      turning: true,
+    },
+    {
+      id: 'bhoomi-jal-samadhi',
+      title: 'Sita\'s Bhoomi Pariksha & Ram\'s Jal Samadhi',
+      subtitle: 'Return to the Source',
+      location: 'Ayodhya Court → Sarayu River',
+      description: 'Summoned to court, Sita calls upon Mother Bhoomi Devi — and the earth opens. She descends, returning to her origin. Ram then completes his avatar mission by walking into the sacred Sarayu River with his brothers and countless citizens, returning to eternal Vishnu-form.',
+      characters: ['Ram', 'Sita', 'Luv', 'Kush'],
+      media: { hero: '/assets/ayodhya_gate_bg.png', background: '/assets/ayodhya_gate_bg.png' },
+      turning: true,
+      quote: 'Born of Earth. Raised by Earth. Returned to Earth. Eternal.',
+    },
+  ],
+};
