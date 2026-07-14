@@ -25,7 +25,7 @@ export const balaKanda: KandaSection = {
     { name: 'Vishwamitra', role: 'Sage', status: 'active', portrait: '/assets/character_vishwamitra.png', description: 'Royal sage who guides Ram and Lakshmana to protect his yagna and imparts divine astras.' },
     { name: 'Vashishtha', role: 'Sage & Guru', status: 'active', portrait: '/assets/character_vashishtha.png', description: 'Royal preceptor of the Ikshvaku dynasty — an embodiment of divine wisdom.' },
     { name: 'Janaka', role: 'King of Mithila', status: 'active', portrait: '/assets/character_janaka.png', description: 'Philosopher-king who raises Sita and organizes the Swayamvara around Shiva\'s bow.' },
-    { name: 'Parashurama', role: 'Divine Sage-Warrior', weapon: 'Parashu (Axe)', status: 'active', portrait: '/assets/character_vishwamitra.png', description: 'Sixth avatar of Vishnu who challenges Ram after the Shiva Bow is broken.' },
+    { name: 'Parashurama', role: 'Divine Sage-Warrior', weapon: 'Parashu (Axe)', status: 'active', portrait: '/assets/character_parashurama.png', description: 'Sixth avatar of Vishnu who challenges Ram after the Shiva Bow is broken.' },
     { name: 'Kaushalya', role: 'Queen', status: 'active', portrait: '/assets/character_kausalya.png', description: 'Ram\'s devoted mother whose piety directly invites his divine birth.' },
     { name: 'Kaikeyi', role: 'Queen', status: 'active', portrait: '/assets/character_kaikeyi.png', description: 'Bharata\'s mother, later an instrument of cosmic destiny through Manthara.' },
   ],

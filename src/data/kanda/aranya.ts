@@ -25,7 +25,7 @@ export const aranyaKanda: KandaSection = {
     { name: 'Surpanakha', role: 'Demoness', status: 'active', portrait: '/assets/character_surpanakha.png', description: 'Ravana\'s sister whose disfigurement by Lakshmana ignites the war.' },
     { name: 'Ravana', role: 'Antagonist', weapon: 'Chandrahas', status: 'active', portrait: '/assets/character_ravana.png', description: 'Disguises himself as an ascetic to abduct Sita when Ram is lured away.' },
     { name: 'Jatayu', role: 'Divine Eagle', status: 'departed', portrait: '/assets/character_jatayu.png', description: 'The aged king of vultures who fights Ravana in mid-air. Fatally wounded, he lives to tell Ram the truth.' },
-    { name: 'Mareecha', role: 'Demon', status: 'departed', portrait: '/assets/character_dasharatha.png', description: 'Takes the form of a golden deer to lure Ram, then cries in Ram\'s voice to lure Lakshmana away.' },
+    { name: 'Mareecha', role: 'Demon', status: 'departed', portrait: '/assets/character_maricha.png', description: 'Takes the form of a golden deer to lure Ram, then cries in Ram\'s voice to lure Lakshmana away.' },
   ],
   locations: [
     { name: 'Dandakaranya', description: 'The vast primordial forest covering central India, home to hundreds of sages\' ashrams.', realWorld: 'Chhattisgarh / Madhya Pradesh region', image: '/assets/forest_threshold_bg.png' },
