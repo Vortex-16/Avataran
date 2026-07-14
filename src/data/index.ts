@@ -27,6 +27,24 @@ export type {
   QuizQuestion,
 } from '@/data/types';
 
+// Re-export the curated verse databases (Phase 1B)
+export {
+  verseDatabases,
+  verseDatabaseByKanda,
+  getVerseDB,
+  getVersesByKanda,
+  getVersesByEvent,
+  allVerses,
+  totalCuratedVerses,
+  balaVerses,
+  ayodhyaVerses,
+  aranyaVerses,
+  kishkindhaVerses,
+  sundaraVerses,
+  yuddhaVerses,
+  uttaraVerses,
+} from '@/data/verses';
+
 // Re-export individual kanda exports (for lazy loading)
 export { balaKanda } from '@/data/kanda/bala';
 export { ayodhyaKanda } from '@/data/kanda/ayodhya';
