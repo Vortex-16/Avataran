@@ -27,6 +27,8 @@ export default function GalleryTab({ items, styles, onSelect }: GalleryTabProps)
           <img
             src={g.image}
             alt={g.caption}
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             style={{ filter: 'brightness(0.65) saturate(1.1)' }}
           />

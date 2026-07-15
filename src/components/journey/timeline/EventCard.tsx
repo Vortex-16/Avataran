@@ -10,6 +10,7 @@ import TimelineNode from './TimelineNode';
 import DeepotsavCard from '../special/DeepotsavCard';
 import MandirCard from '../special/MandirCard';
 import GarbhagrihaCard from '../special/GarbhagrihaCard';
+import BookmarkButton from '../interactive/BookmarkButton';
 
 interface EventCardProps {
   event: TimelineEvent;
@@ -57,6 +58,8 @@ export default function EventCard({
             <img
               src={event.media.hero}
               alt={event.title}
+              loading={idx === 0 ? 'eager' : 'lazy'}
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover"
               style={{ filter: 'brightness(0.55) saturate(1.15)' }}
             />
@@ -66,6 +69,8 @@ export default function EventCard({
                 src={event.media.parallaxFg}
                 alt=""
                 aria-hidden
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                 style={{ filter: 'brightness(0.65)', mixBlendMode: 'luminosity', opacity: 0.4 }}
               />
@@ -117,6 +122,13 @@ export default function EventCard({
               <span className={`shrink-0 font-display ${isLight ? 'text-[#2b251f]/15' : 'text-[#f4e8d3]/15'} text-2xl leading-none`}>
                 {String(idx + 1).padStart(2, '0')}
               </span>
+              <div className="shrink-0">
+                <BookmarkButton
+                  entry={{ type: 'event', kandaId: kanda.id, refId: event.id }}
+                  isLight={isLight}
+                  sizeClass="h-3.5 w-3.5"
+                />
+              </div>
             </div>
 
             {/* Description */}

@@ -23,6 +23,8 @@ export default function CharactersTab({ kanda, styles }: CharactersTabProps) {
             <img
               src={char.portrait}
               alt={char.name}
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover object-top"
               style={{ filter: 'brightness(0.6) saturate(1.1)' }}
             />

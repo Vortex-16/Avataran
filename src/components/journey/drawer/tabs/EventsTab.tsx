@@ -24,6 +24,8 @@ export default function EventsTab({ kanda, styles }: EventsTabProps) {
             <img
               src={ev.media.hero}
               alt={ev.title}
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover"
               style={{ filter: 'brightness(0.5) saturate(1.15)' }}
             />

@@ -23,6 +23,8 @@ export default function LocationsTab({ kanda, styles }: LocationsTabProps) {
             <img
               src={loc.image}
               alt={loc.name}
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover"
               style={{ filter: 'brightness(0.5) saturate(1.2)' }}
             />

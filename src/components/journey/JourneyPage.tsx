@@ -7,8 +7,10 @@
 'use client';
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { timelineData } from '@/data';
 import type { KandaSection, KandaId } from '@/data/types';
+import { useStore } from '@/app/store';
 
 import { useTheme } from '@/hooks/useTheme';
 import { useIsMobile } from '@/hooks/useMediaQuery';
@@ -18,6 +20,7 @@ import { useLenis } from '@/hooks/useLenis';
 import { useKandaTracker } from '@/hooks/useKandaTracker';
 
 import ThemeToggle from './layout/ThemeToggle';
+import TopToolbar from './layout/TopToolbar';
 import ScrollRing from './layout/ScrollRing';
 import LeftKandaNav from './layout/LeftKandaNav';
 import BottomDock, { JourneyView } from './layout/BottomDock';
@@ -25,12 +28,33 @@ import ResumePrompt from './layout/ResumePrompt';
 import TimelineTrack from './timeline/TimelineTrack';
 import KandaDrawer from './drawer/KandaDrawer';
 import DynamicIslandPlayer from './DynamicIslandPlayer';
+import SlokaOfTheDay from './interactive/SlokaOfTheDay';
+
+// ── Heavy overlays: lazy-loaded on demand (Phase 1D split) ──
+const SearchModal = dynamic(() => import('./interactive/SearchModal'), { ssr: false });
+const KandaQuizModal = dynamic(() => import('./interactive/KandaQuizModal'), { ssr: false });
+const CharacterConstellation = dynamic(() => import('./interactive/CharacterConstellation'), { ssr: false });
+const BookmarkPanel = dynamic(() => import('./interactive/BookmarkPanel'), { ssr: false });
+const ReadingModeDrawer = dynamic(() => import('./interactive/ReadingModeDrawer'), { ssr: false });
 
 export default function JourneyPage() {
   const { theme, isLight, toggleTheme } = useTheme();
   const isMobile = useIsMobile();
   const scrollProgress = useScrollProgress();
   const { savedProgress, showResumePrompt, saveProgress, clearProgress, dismissPrompt } = useProgress();
+
+  // ── Interactive feature state (Phase 1C) ──
+  const hydrateInteractive = useStore(s => s.hydrateInteractive);
+  const activeOverlay = useStore(s => s.activeOverlay);
+  const openOverlay = useStore(s => s.openOverlay);
+  const closeOverlay = useStore(s => s.closeOverlay);
+  const openQuiz = useStore(s => s.openQuiz);
+  const openReading = useStore(s => s.openReading);
+  const quizMode = useStore(s => s.quizMode);
+  const quizKandaId = useStore(s => s.quizKandaId);
+  const readingKandaId = useStore(s => s.readingKandaId);
+  const savedCount = useStore(s => s.bookmarks.length);
+  const dailyStreak = useStore(s => s.quizStats.dailyStreak);
 
   const [activeKanda, setActiveKanda] = useState<KandaId>('bala');
   const [currentView, setCurrentView] = useState<JourneyView>('lifeline');
@@ -47,6 +71,9 @@ export default function JourneyPage() {
 
   const closeDrawer = useCallback(() => setOpenDrawer(null), []);
   const handleKandaChange = useCallback((id: KandaId) => setActiveKanda(id), []);
+
+  // Load persisted bookmarks / quiz stats once on mount.
+  useEffect(() => { hydrateInteractive(); }, [hydrateInteractive]);
 
   // ── Visible kandas for the current view / device ──────────
   const visibleKandas: KandaSection[] =
@@ -70,6 +97,21 @@ export default function JourneyPage() {
     if (showResumePrompt) return;
     saveProgress({ view: currentView, kandaId: activeKanda, mobileIndex: activeMobileChapterIndex });
   }, [currentView, activeKanda, activeMobileChapterIndex, showResumePrompt, saveProgress]);
+
+  // ── Global keyboard shortcut: Cmd/Ctrl+K & "/" open search ─
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        openOverlay('search');
+      } else if (e.key === '/' && !/input|textarea|select/i.test((e.target as HTMLElement)?.tagName ?? '')) {
+        e.preventDefault();
+        openOverlay('search');
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [openOverlay]);
 
   // ── Navigation ────────────────────────────────────────────
   const handleViewChange = useCallback((view: JourneyView) => {
@@ -95,6 +137,24 @@ export default function JourneyPage() {
     }, 300);
     dismissPrompt();
   }, [savedProgress, dismissPrompt]);
+
+  // Navigate to a kanda from search / constellation / sloka widget.
+  const navigateToKanda = useCallback((kandaId: KandaId) => {
+    if (kandaId === 'ayodhya-mandir') {
+      handleViewChange('mandir');
+      return;
+    }
+    const idx = timelineData.findIndex(k => k.id === kandaId);
+    if (idx < 0) return;
+    setCurrentView('lifeline');
+    setActiveKanda(kandaId);
+    if (isMobile) setActiveMobileChapterIndex(idx);
+    setTimeout(() => {
+      const el = document.getElementById(`section-${kandaId}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 120);
+  }, [handleViewChange, isMobile]);
 
   return (
     <div
@@ -161,9 +221,29 @@ export default function JourneyPage() {
 
       {/* Fixed UI */}
       <ThemeToggle isLight={isLight} onToggle={toggleTheme} />
-      <BottomDock currentView={currentView} onViewChange={handleViewChange} isLight={isLight} />
-      <KandaDrawer kanda={openDrawer} onClose={closeDrawer} theme={theme} />
+      <TopToolbar
+        isLight={isLight}
+        dailyStreak={dailyStreak}
+        onOpenSearch={() => openOverlay('search')}
+        onOpenDaily={() => openQuiz('daily')}
+      />
+      <BottomDock
+        currentView={currentView}
+        onViewChange={handleViewChange}
+        onOpenCharacters={() => openOverlay('constellation')}
+        onOpenSaved={() => openOverlay('bookmarks')}
+        savedCount={savedCount}
+        isLight={isLight}
+      />
+      <KandaDrawer
+        kanda={openDrawer}
+        onClose={closeDrawer}
+        theme={theme}
+        onOpenReading={openReading}
+        onOpenQuiz={(id) => openQuiz('kanda', id)}
+      />
       <DynamicIslandPlayer />
+      <SlokaOfTheDay isLight={isLight} onOpenKanda={navigateToKanda} />
       <ResumePrompt
         show={showResumePrompt}
         savedProgress={savedProgress}
@@ -172,6 +252,23 @@ export default function JourneyPage() {
         onResume={handleResume}
       />
       {isMobile && <ScrollRing isLight={isLight} progress={scrollProgress} />}
+
+      {/* ── Lazy interactive overlays ── */}
+      {activeOverlay === 'search' && (
+        <SearchModal open isLight={isLight} onClose={closeOverlay} onNavigate={navigateToKanda} />
+      )}
+      {activeOverlay === 'quiz' && (
+        <KandaQuizModal open isLight={isLight} mode={quizMode} kandaId={quizKandaId} onClose={closeOverlay} />
+      )}
+      {activeOverlay === 'constellation' && (
+        <CharacterConstellation open isLight={isLight} onClose={closeOverlay} onOpenKanda={navigateToKanda} />
+      )}
+      {activeOverlay === 'bookmarks' && (
+        <BookmarkPanel open isLight={isLight} onClose={closeOverlay} onOpenKanda={navigateToKanda} />
+      )}
+      {activeOverlay === 'reading' && (
+        <ReadingModeDrawer open kandaId={readingKandaId} onClose={closeOverlay} />
+      )}
     </div>
   );
 }

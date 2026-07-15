@@ -27,9 +27,11 @@ interface KandaDrawerProps {
   kanda: KandaSection | null;
   onClose: () => void;
   theme: 'dark' | 'light';
+  onOpenReading?: (kandaId: KandaSection['id']) => void;
+  onOpenQuiz?: (kandaId: KandaSection['id']) => void;
 }
 
-export default function KandaDrawer({ kanda, onClose, theme }: KandaDrawerProps) {
+export default function KandaDrawer({ kanda, onClose, theme, onOpenReading, onOpenQuiz }: KandaDrawerProps) {
   const [tab, setTab] = useState<TabId>('events');
   const [gallery, setGallery] = useState<GalleryItem | null>(null);
   const [displayGallery, setDisplayGallery] = useState<GalleryItem[]>([]);
@@ -106,6 +108,8 @@ export default function KandaDrawer({ kanda, onClose, theme }: KandaDrawerProps)
               <img
                 src={kanda.heroImage}
                 alt={kanda.title}
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 w-full h-full object-cover object-center"
                 style={{ filter: 'brightness(0.45) saturate(1.1)' }}
               />
@@ -142,15 +146,29 @@ export default function KandaDrawer({ kanda, onClose, theme }: KandaDrawerProps)
 
             {/* Sloka Banner */}
             <div
-              className={`shrink-0 px-6 py-3 border-y ${borderDivider}`}
+              className={`shrink-0 px-6 py-3 border-y ${borderDivider} flex items-center gap-4`}
               style={{ background: `linear-gradient(90deg, ${kanda.accentHex}08, transparent)` }}
             >
-              <p className="font-devanagari text-sm italic" style={{ color: kanda.accentHex }}>
-                {kanda.sloka}
-              </p>
-              <p className={`font-body text-[10px] ${isLight ? 'text-[#3a3229]/65' : 'text-[#f4e8d3]/45'} italic mt-0.5`}>
-                {kanda.slokaTranslation}
-              </p>
+              <div className="min-w-0 flex-1">
+                <p className="font-devanagari text-sm italic truncate" style={{ color: kanda.accentHex }}>
+                  {kanda.sloka}
+                </p>
+                <p className={`font-body text-[10px] ${isLight ? 'text-[#3a3229]/65' : 'text-[#f4e8d3]/45'} italic mt-0.5 line-clamp-1`}>
+                  {kanda.slokaTranslation}
+                </p>
+              </div>
+              {onOpenQuiz && (kanda.quizQuestions?.length ?? 0) > 0 && (
+                <button
+                  onClick={() => onOpenQuiz(kanda.id)}
+                  className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full font-body text-[9px] uppercase tracking-wider font-bold border transition-all cursor-pointer"
+                  style={{ borderColor: `${kanda.accentHex}55`, color: kanda.accentHex, background: `${kanda.accentHex}12` }}
+                >
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Quiz
+                </button>
+              )}
             </div>
 
             {/* Tab Bar */}
@@ -184,7 +202,7 @@ export default function KandaDrawer({ kanda, onClose, theme }: KandaDrawerProps)
               {tab === 'locations' && <LocationsTab kanda={kanda} styles={styles} />}
               {tab === 'weapons' && <WeaponsTab kanda={kanda} styles={styles} />}
               {tab === 'dialogues' && <DialoguesTab kanda={kanda} styles={styles} />}
-              {tab === 'verses' && <VersesTab kanda={kanda} styles={styles} />}
+              {tab === 'verses' && <VersesTab kanda={kanda} styles={styles} onOpenReading={onOpenReading ? () => onOpenReading(kanda.id) : undefined} />}
               {tab === 'gallery' && <GalleryTab items={displayGallery} styles={styles} onSelect={setGallery} />}
               {tab === 'facts' && <FactsTab kanda={kanda} styles={styles} />}
               {tab === 'references' && <ReferencesTab kanda={kanda} styles={styles} />}
