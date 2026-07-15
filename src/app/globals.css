@@ -401,3 +401,13 @@ body::-webkit-scrollbar {
   scrollbar-color: rgba(208, 92, 67, 0.35) rgba(245, 238, 226, 0.6) !important;
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+

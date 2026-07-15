@@ -89,14 +89,14 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
     }
   };
 
-  const panelBg = isLight ? 'bg-[#faf7f2]/97 border-black/10 text-[#1c1814]' : 'bg-[#0d0c0a]/95 border-white/10 text-[#f4e8d3]';
+  const panelBg = isLight ? 'bg-[#faf6f0] border-black/10 text-[#2b251f]' : 'bg-[#0d0c0a]/95 border-white/10 text-[#f4e8d3]';
   const pct = total ? Math.round((score / total) * 100) : 0;
 
   return (
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+        className={`fixed inset-0 z-[80] flex items-center justify-center p-4 backdrop-blur-md transition-all ${isLight ? 'bg-black/40' : 'bg-black/75'}`}
         onClick={onClose}
       >
         <motion.div
@@ -105,7 +105,7 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
           exit={{ opacity: 0, scale: 0.94, y: 16 }}
           transition={{ type: 'spring', damping: 26, stiffness: 300 }}
           onClick={e => e.stopPropagation()}
-          className={`w-full max-w-lg rounded-2xl border backdrop-blur-xl shadow-[0_30px_70px_rgba(0,0,0,0.7)] overflow-hidden ${panelBg}`}
+          className={`w-full max-w-lg rounded-2xl border backdrop-blur-xl shadow-[0_30px_70px_rgba(0,0,0,0.4)] overflow-hidden ${panelBg}`}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3 border-b" style={{ borderColor: isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.07)' }}>
@@ -113,31 +113,31 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
               <span className="text-[#ff7900]">✦</span>
               <span className="font-display text-sm uppercase tracking-wider">{title}</span>
             </div>
-            <button onClick={onClose} aria-label="Close" className={`w-7 h-7 rounded-full flex items-center justify-center cursor-pointer ${isLight ? 'text-black/40 hover:text-black' : 'text-white/40 hover:text-white'}`}>
+            <button onClick={onClose} aria-label="Close" className={`w-7 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors ${isLight ? 'text-black/40 hover:text-black hover:bg-black/5' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>
 
           <div className="p-5">
             {total === 0 ? (
-              <p className="font-body text-xs text-center py-8 opacity-60">No questions available yet.</p>
+              <p className={`font-body text-xs text-center py-8 ${isLight ? 'text-black/40' : 'text-white/40'}`}>No questions available yet.</p>
             ) : done ? (
               // ── Result screen ──
               <div className="flex flex-col items-center gap-4 py-4 text-center">
                 <div className="relative w-24 h-24">
                   <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)'} strokeWidth="3" />
+                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)'} strokeWidth="3" />
                     <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ff7900" strokeWidth="3" strokeLinecap="round" strokeDasharray={`${pct}, 100`} />
                   </svg>
                   <span className="absolute inset-0 flex items-center justify-center font-display text-xl">{pct}%</span>
                 </div>
-                <p className="font-display text-lg uppercase tracking-wide">
+                <p className={`font-display text-lg uppercase tracking-wide ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'}`}>
                   {score} / {total} correct
                 </p>
-                <p className="font-body text-xs opacity-70 max-w-[280px]">
+                <p className={`font-body text-xs max-w-[280px] ${isLight ? 'text-[#3a3229]/80' : 'text-[#f4e8d3]/70'}`}>
                   {pct === 100 ? 'Flawless! A true scholar of the Ramayana.' : pct >= 60 ? 'Well done — your knowledge shines.' : 'Keep exploring the Kandas and try again.'}
                 </p>
-                <button onClick={onClose} className="mt-2 px-6 py-2.5 rounded-xl font-body text-[10px] uppercase tracking-widest font-bold text-white cursor-pointer bg-gradient-to-r from-[#ff5e00] to-[#ff7900] hover:shadow-[0_0_18px_rgba(255,94,0,0.4)] transition-all">
+                <button onClick={onClose} className="mt-2 px-6 py-2.5 rounded-xl font-body text-[10px] uppercase tracking-widest font-bold text-white cursor-pointer bg-gradient-to-r from-[#ff5e00] to-[#ff7900] hover:shadow-[0_0_18px_rgba(255,94,0,0.4)] transition-all border-none">
                   Close
                 </button>
               </div>
@@ -145,7 +145,7 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
               // ── Question screen ──
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
-                  <span className="font-body text-[9px] uppercase tracking-widest opacity-50">
+                  <span className={`font-body text-[9px] uppercase tracking-widest ${isLight ? 'text-black/45' : 'text-white/45'}`}>
                     {mode === 'daily' ? `Streak: ${dailyStreak} 🔥` : `Question ${i + 1} of ${total}`}
                   </span>
                   <span className="font-body text-[9px] uppercase tracking-widest px-2 py-0.5 rounded-full border" style={{ borderColor: '#ff790055', color: '#ff7900' }}>
@@ -153,17 +153,27 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
                   </span>
                 </div>
 
-                <h3 className="font-display text-base leading-snug">{q.question}</h3>
+                <h3 className={`font-display text-base leading-snug ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'}`}>{q.question}</h3>
 
                 <div className="flex flex-col gap-2">
                   {q.options.map((opt, idx) => {
                     const isCorrect = idx === q.correctIndex;
                     const isPicked = idx === picked;
-                    let cls = isLight ? 'border-black/10 hover:border-[#ff7900]/50' : 'border-white/10 hover:border-[#ff7900]/50';
-                    if (picked !== null) {
-                      if (isCorrect) cls = 'border-green-500/70 bg-green-500/10';
-                      else if (isPicked) cls = 'border-red-500/70 bg-red-500/10';
-                      else cls = isLight ? 'border-black/5 opacity-60' : 'border-white/5 opacity-50';
+                    let cls = '';
+                    if (picked === null) {
+                      cls = isLight
+                        ? 'bg-black/[0.015] border-black/10 hover:border-[#ff7900]/50 hover:bg-black/[0.03] text-[#2b251f]'
+                        : 'bg-white/[0.015] border-white/10 hover:border-[#ff7900]/50 hover:bg-white/[0.03] text-[#f4e8d3]';
+                    } else {
+                      if (isCorrect) {
+                        cls = 'border-green-500/70 bg-green-500/10 text-green-600 dark:text-green-400 font-bold';
+                      } else if (isPicked) {
+                        cls = 'border-red-500/70 bg-red-500/10 text-red-600 dark:text-red-400 font-bold';
+                      } else {
+                        cls = isLight
+                          ? 'border-black/5 opacity-40 text-black/40'
+                          : 'border-white/5 opacity-45 text-[#f4e8d3]/40';
+                      }
                     }
                     return (
                       <button
@@ -176,8 +186,8 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
                           {String.fromCharCode(65 + idx)}
                         </span>
                         <span className="flex-1">{opt}</span>
-                        {picked !== null && isCorrect && <span className="text-green-500">✓</span>}
-                        {picked !== null && isPicked && !isCorrect && <span className="text-red-500">✕</span>}
+                        {picked !== null && isCorrect && <span className="text-green-500 font-bold">✓</span>}
+                        {picked !== null && isPicked && !isCorrect && <span className="text-red-500 font-bold">✕</span>}
                       </button>
                     );
                   })}
@@ -185,8 +195,8 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
 
                 {picked !== null && (
                   <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-                    className={`rounded-xl border p-3 ${isLight ? 'bg-black/[0.02] border-black/8' : 'bg-white/[0.03] border-white/8'}`}>
-                    <p className="font-body text-[11px] leading-relaxed opacity-80">
+                    className={`rounded-xl border p-3 ${isLight ? 'bg-[#ff7900]/[0.03] border-[#ff7900]/15 text-[#3a3229]' : 'bg-[#ff7900]/[0.05] border-[#ff7900]/15 text-[#f4e8d3]'}`}>
+                    <p className="font-body text-[11px] leading-relaxed opacity-90">
                       <span className="text-[#ff9933] font-semibold">Why: </span>{q.explanation}
                     </p>
                   </motion.div>
@@ -198,8 +208,8 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
                     disabled={picked === null}
                     className={`px-6 py-2.5 rounded-xl font-body text-[10px] uppercase tracking-widest font-bold transition-all ${
                       picked === null
-                        ? 'opacity-40 cursor-not-allowed border ' + (isLight ? 'border-black/10' : 'border-white/10')
-                        : 'cursor-pointer text-white bg-gradient-to-r from-[#ff5e00] to-[#ff7900] hover:shadow-[0_0_18px_rgba(255,94,0,0.4)]'
+                        ? 'opacity-40 cursor-not-allowed border ' + (isLight ? 'border-black/10 text-black/40' : 'border-white/10 text-white/40')
+                        : 'cursor-pointer text-white bg-gradient-to-r from-[#ff5e00] to-[#ff7900] hover:shadow-[0_0_18px_rgba(255,94,0,0.4)] border-none'
                     }`}
                   >
                     {i + 1 >= total ? 'Finish' : 'Next'}
