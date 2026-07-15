@@ -56,7 +56,7 @@ export default function EventCard({
           {/* Hero image section */}
           <div className="relative h-40 md:h-48 overflow-hidden">
             <img
-              src={event.media.hero}
+              src={event.id === 'ram-mandir' && isNightMode ? '/assets/bg_temple_night.png' : event.media.hero}
               alt={event.title}
               loading={idx === 0 ? 'eager' : 'lazy'}
               decoding="async"
