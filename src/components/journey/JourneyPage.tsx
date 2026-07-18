@@ -47,6 +47,7 @@ export default function JourneyPage() {
   const { savedProgress, showResumePrompt, saveProgress, clearProgress, dismissPrompt } = useProgress();
 
   // ── Interactive feature state (Phase 1C) ──
+  const isReady = useStore(s => s.isReady);
   const hydrateInteractive = useStore(s => s.hydrateInteractive);
   const activeOverlay = useStore(s => s.activeOverlay);
   const openOverlay = useStore(s => s.openOverlay);
@@ -180,7 +181,7 @@ export default function JourneyPage() {
       <div className={`absolute inset-0 bg-[linear-gradient(to_right,rgba(${isLight ? '43,37,31,0.015' : '244,232,211,0.02'})_1px,transparent_1px),linear-gradient(to_bottom,rgba(${isLight ? '43,37,31,0.015' : '244,232,211,0.02'})_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none`} />
 
       {/* Left Nav — Kanda tracker (desktop, lifeline only) */}
-      {currentView === 'lifeline' && (
+      {isReady && currentView === 'lifeline' && (
         <LeftKandaNav kandas={timelineData.slice(0, 7)} activeKanda={activeKanda} isLight={isLight} />
       )}
 
@@ -224,39 +225,43 @@ export default function JourneyPage() {
       </div>
 
       {/* Fixed UI */}
-      <ThemeToggle isLight={isLight} onToggle={toggleTheme} />
-      <LanguageToggle isLight={isLight} />
-      <TopToolbar
-        isLight={isLight}
-        dailyStreak={dailyStreak}
-        onOpenSearch={() => openOverlay('search')}
-        onOpenDaily={() => openQuiz('daily')}
-      />
-      <BottomDock
-        currentView={currentView}
-        onViewChange={handleViewChange}
-        onOpenCharacters={() => openOverlay('constellation')}
-        onOpenSaved={() => openOverlay('bookmarks')}
-        savedCount={savedCount}
-        isLight={isLight}
-      />
-      <KandaDrawer
-        kanda={openDrawer}
-        onClose={closeDrawer}
-        theme={theme}
-        onOpenReading={openReading}
-        onOpenQuiz={(id) => openQuiz('kanda', id)}
-      />
-      <DynamicIslandPlayer />
-      <SlokaOfTheDay isLight={isLight} onOpenKanda={navigateToKanda} />
-      <ResumePrompt
-        show={showResumePrompt}
-        savedProgress={savedProgress}
-        isLight={isLight}
-        onStartFresh={clearProgress}
-        onResume={handleResume}
-      />
-      {isMobile && <ScrollRing isLight={isLight} progress={scrollProgress} />}
+      {isReady && (
+        <>
+          <ThemeToggle isLight={isLight} onToggle={toggleTheme} />
+          <LanguageToggle isLight={isLight} />
+          <TopToolbar
+            isLight={isLight}
+            dailyStreak={dailyStreak}
+            onOpenSearch={() => openOverlay('search')}
+            onOpenDaily={() => openQuiz('daily')}
+          />
+          <BottomDock
+            currentView={currentView}
+            onViewChange={handleViewChange}
+            onOpenCharacters={() => openOverlay('constellation')}
+            onOpenSaved={() => openOverlay('bookmarks')}
+            savedCount={savedCount}
+            isLight={isLight}
+          />
+          <KandaDrawer
+            kanda={openDrawer}
+            onClose={closeDrawer}
+            theme={theme}
+            onOpenReading={openReading}
+            onOpenQuiz={(id) => openQuiz('kanda', id)}
+          />
+          <DynamicIslandPlayer />
+          <SlokaOfTheDay isLight={isLight} onOpenKanda={navigateToKanda} />
+          <ResumePrompt
+            show={showResumePrompt}
+            savedProgress={savedProgress}
+            isLight={isLight}
+            onStartFresh={clearProgress}
+            onResume={handleResume}
+          />
+          {isMobile && <ScrollRing isLight={isLight} progress={scrollProgress} />}
+        </>
+      )}
 
       {/* ── Lazy interactive overlays ── */}
       {activeOverlay === 'search' && (
