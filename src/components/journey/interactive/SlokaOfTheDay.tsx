@@ -39,6 +39,18 @@ export default function SlokaOfTheDay({ isLight, onOpenKanda }: SlokaOfTheDayPro
 
   const share = async () => {
     const text = `${verse.devanagari}\n\n${verse.translation}\n— Valmiki Ramayana (${kandaId} ${verse.sarga}.${verse.shloka})\n\nvia AVATARAN`;
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: t('sloka.title'),
+          text: text,
+          url: typeof window !== 'undefined' ? window.location.href : '',
+        });
+        return;
+      } catch (err) {
+        // Fallback to clipboard if share was cancelled
+      }
+    }
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);

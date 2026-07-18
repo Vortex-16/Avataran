@@ -7,6 +7,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useT } from '@/hooks/useT';
+import { useStore } from '@/app/store';
 
 export type JourneyView = 'lifeline' | 'mandir';
 
@@ -25,10 +26,16 @@ export default function BottomDock({
   currentView, onViewChange, onOpenCharacters, onOpenSaved, savedCount, isLight,
 }: BottomDockProps) {
   const { t } = useT();
+  const activeOverlay = useStore(s => s.activeOverlay);
   const inactive = isLight ? 'text-black/55 hover:text-black' : 'text-[#f4e8d3]/60 hover:text-[#f4e8d3]';
 
+  const isLifelineActive = activeOverlay === 'none' && currentView === 'lifeline';
+  const isMandirActive = activeOverlay === 'none' && currentView === 'mandir';
+  const isCharactersActive = activeOverlay === 'constellation';
+  const isSavedActive = activeOverlay === 'bookmarks';
+
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[45] pointer-events-auto w-[94%] max-w-md">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] pointer-events-auto w-[94%] max-w-md">
       <div className={`relative px-3 py-2 rounded-full border backdrop-blur-xl transition-all duration-500 shadow-[0_15px_45px_rgba(0,0,0,0.5)] flex items-center justify-between gap-0.5 ${
         isLight ? 'bg-white/75 border-black/10 text-[#2b251f]' : 'bg-[#0d0c0a]/65 border-white/10 text-[#f4e8d3]'
       }`}>
@@ -36,10 +43,10 @@ export default function BottomDock({
         <button
           onClick={() => onViewChange('lifeline')}
           className={`relative flex-1 py-2 px-2 rounded-full font-body text-[9px] uppercase tracking-wider font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-300 ${
-            currentView === 'lifeline' ? 'text-[#ff7900] z-10' : inactive
+            isLifelineActive ? 'text-[#ff7900] z-10' : inactive
           }`}
         >
-          {currentView === 'lifeline' && (
+          {isLifelineActive && (
             <motion.div layoutId="activeDockTab" className={`absolute inset-0 rounded-full z-[-1] border ${isLight ? 'bg-black/[0.04] border-black/10' : 'bg-white/[0.06] border-white/10'}`} transition={{ type: 'spring', stiffness: 380, damping: 30 }} />
           )}
           <svg xmlns="http://www.w3.org/2000/svg" className={iconCls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -51,8 +58,13 @@ export default function BottomDock({
         {/* Characters */}
         <button
           onClick={onOpenCharacters}
-          className={`relative flex-1 py-2 px-2 rounded-full font-body text-[9px] uppercase tracking-wider font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-300 ${inactive}`}
+          className={`relative flex-1 py-2 px-2 rounded-full font-body text-[9px] uppercase tracking-wider font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-300 ${
+            isCharactersActive ? 'text-[#ff7900] z-10' : inactive
+          }`}
         >
+          {isCharactersActive && (
+            <motion.div layoutId="activeDockTab" className={`absolute inset-0 rounded-full z-[-1] border ${isLight ? 'bg-black/[0.04] border-black/10' : 'bg-white/[0.06] border-white/10'}`} transition={{ type: 'spring', stiffness: 380, damping: 30 }} />
+          )}
           <svg xmlns="http://www.w3.org/2000/svg" className={iconCls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-1a4 4 0 00-4-4h-1m-6 5H2v-1a4 4 0 014-4h4a4 4 0 014 4v1zm-3-11a3 3 0 11-6 0 3 3 0 016 0zm7 0a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
@@ -63,10 +75,10 @@ export default function BottomDock({
         <button
           onClick={() => onViewChange('mandir')}
           className={`relative flex-1 py-2 px-2 rounded-full font-body text-[9px] uppercase tracking-wider font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-300 ${
-            currentView === 'mandir' ? 'text-[#ff7900] z-10' : inactive
+            isMandirActive ? 'text-[#ff7900] z-10' : inactive
           }`}
         >
-          {currentView === 'mandir' && (
+          {isMandirActive && (
             <motion.div layoutId="activeDockTab" className={`absolute inset-0 rounded-full z-[-1] border ${isLight ? 'bg-black/[0.04] border-black/10' : 'bg-white/[0.06] border-white/10'}`} transition={{ type: 'spring', stiffness: 380, damping: 30 }} />
           )}
           <svg xmlns="http://www.w3.org/2000/svg" className={iconCls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -78,8 +90,13 @@ export default function BottomDock({
         {/* Saved */}
         <button
           onClick={onOpenSaved}
-          className={`relative flex-1 py-2 px-2 rounded-full font-body text-[9px] uppercase tracking-wider font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-300 ${inactive}`}
+          className={`relative flex-1 py-2 px-2 rounded-full font-body text-[9px] uppercase tracking-wider font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-300 ${
+            isSavedActive ? 'text-[#ff7900] z-10' : inactive
+          }`}
         >
+          {isSavedActive && (
+            <motion.div layoutId="activeDockTab" className={`absolute inset-0 rounded-full z-[-1] border ${isLight ? 'bg-black/[0.04] border-black/10' : 'bg-white/[0.06] border-white/10'}`} transition={{ type: 'spring', stiffness: 380, damping: 30 }} />
+          )}
           <span className="relative">
             <svg xmlns="http://www.w3.org/2000/svg" className={iconCls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />

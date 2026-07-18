@@ -93,10 +93,10 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
   useEffect(() => {
     const touch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const small = window.innerWidth < 768;
-    setIsMobile(touch);
+    setIsMobile(touch || small);
     // The pan/zoom graph is awkward on phones — default small screens to the
     // clean directory grid, which is inherently mobile-friendly.
-    if (small) setViewMode('list');
+    if (small || touch) setViewMode('list');
   }, []);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -316,28 +316,30 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
               </div>
 
               {/* View Mode Toggle */}
-              <div className={`flex rounded-full border p-0.5 ${isLight ? 'bg-black/[0.02] border-black/10' : 'bg-white/[0.03] border-white/10'}`}>
-                <button
-                  onClick={() => setViewMode('graph')}
-                  className={`px-2.5 py-0.5 rounded-full text-[9px] font-semibold font-body tracking-wider uppercase transition-all cursor-pointer ${
-                    viewMode === 'graph'
-                      ? 'bg-[#ff7900] text-white shadow-sm'
-                      : isLight ? 'text-black/50 hover:text-black' : 'text-[#f4e8d3]/50 hover:text-[#f4e8d3]'
-                  }`}
-                >
-                  {t('constellation.graph')}
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`px-2.5 py-0.5 rounded-full text-[9px] font-semibold font-body tracking-wider uppercase transition-all cursor-pointer ${
-                    viewMode === 'list'
-                      ? 'bg-[#ff7900] text-white shadow-sm'
-                      : isLight ? 'text-black/50 hover:text-black' : 'text-[#f4e8d3]/50 hover:text-[#f4e8d3]'
-                  }`}
-                >
-                  {t('constellation.list')}
-                </button>
-              </div>
+              {!isMobile && (
+                <div className={`flex rounded-full border p-0.5 ${isLight ? 'bg-black/[0.02] border-black/10' : 'bg-white/[0.03] border-white/10'}`}>
+                  <button
+                    onClick={() => setViewMode('graph')}
+                    className={`px-2.5 py-0.5 rounded-full text-[9px] font-semibold font-body tracking-wider uppercase transition-all cursor-pointer ${
+                      viewMode === 'graph'
+                        ? 'bg-[#ff7900] text-white shadow-sm'
+                        : isLight ? 'text-black/50 hover:text-black' : 'text-[#f4e8d3]/50 hover:text-[#f4e8d3]'
+                    }`}
+                  >
+                    {t('constellation.graph')}
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`px-2.5 py-0.5 rounded-full text-[9px] font-semibold font-body tracking-wider uppercase transition-all cursor-pointer ${
+                      viewMode === 'list'
+                        ? 'bg-[#ff7900] text-white shadow-sm'
+                        : isLight ? 'text-black/50 hover:text-black' : 'text-[#f4e8d3]/50 hover:text-[#f4e8d3]'
+                    }`}
+                  >
+                    {t('constellation.list')}
+                  </button>
+                </div>
+              )}
 
               {/* Reset view (only in graph mode) */}
               {viewMode === 'graph' && (
@@ -523,32 +525,38 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
                             key={n.id}
                             transform={`translate(${p.x},${p.y})`}
                             opacity={dim ? 0.22 : 1}
-                            className="cursor-pointer select-none floating-node"
+                            className="cursor-pointer select-none"
                             style={{
-                              animationDelay: `${(mi % 5) * 0.9}s`,
                               transition: 'opacity 0.3s ease, transform 0.3s ease-out'
                             }}
                             onClick={() => focusOnCharacter(n.id)}
                           >
-                            <circle r={r + 6} fill={hex} opacity={isSel || matchesSearch ? 0.32 : 0.12} style={{ transition: 'r 0.3s ease' }} />
-                            <clipPath id={`clip-${n.id}`}><circle r={r} style={{ transition: 'r 0.3s ease' }} /></clipPath>
-                            <image
-                              href={n.portrait} x={-r} y={-r} width={r * 2} height={r * 2}
-                              clipPath={`url(#clip-${n.id})`}
-                              preserveAspectRatio="xMidYMid slice"
-                              style={{ transition: 'all 0.3s ease' }}
-                            />
-                            <circle r={r} fill="none" stroke={hex} strokeWidth={isSel || matchesSearch ? 3.5 : 2} style={{ transition: 'r 0.3s ease' }} />
-                            <text
-                              y={r + 15} textAnchor="middle"
-                              className="font-body tracking-wide pointer-events-none" 
-                              fontSize={isSel ? 13 : 11} 
-                              fontWeight={isSel ? 700 : 500}
-                              fill={isLight ? '#2b251f' : '#f4e8d3'}
-                              style={{ transition: 'font-size 0.3s ease, font-weight 0.3s ease' }}
+                            <g
+                              className="floating-node"
+                              style={{
+                                animationDelay: `${(mi % 5) * 0.9}s`,
+                              }}
                             >
-                              {n.name}
-                            </text>
+                              <circle r={r + 6} fill={hex} opacity={isSel || matchesSearch ? 0.32 : 0.12} style={{ transition: 'r 0.3s ease' }} />
+                              <clipPath id={`clip-${n.id}`}><circle r={r} style={{ transition: 'r 0.3s ease' }} /></clipPath>
+                              <image
+                                href={n.portrait} x={-r} y={-r} width={r * 2} height={r * 2}
+                                clipPath={`url(#clip-${n.id})`}
+                                preserveAspectRatio="xMidYMid slice"
+                                style={{ transition: 'all 0.3s ease' }}
+                              />
+                              <circle r={r} fill="none" stroke={hex} strokeWidth={isSel || matchesSearch ? 3.5 : 2} style={{ transition: 'r 0.3s ease' }} />
+                              <text
+                                y={r + 15} textAnchor="middle"
+                                className="font-body tracking-wide pointer-events-none" 
+                                fontSize={isSel ? 13 : 11} 
+                                fontWeight={isSel ? 700 : 500}
+                                fill={isLight ? '#2b251f' : '#f4e8d3'}
+                                style={{ transition: 'font-size 0.3s ease, font-weight 0.3s ease' }}
+                              >
+                                {n.name}
+                              </text>
+                            </g>
                           </g>
                         );
                       })}
@@ -573,7 +581,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
                     <p className={`font-body text-xs ${isLight ? 'text-black/50' : 'text-white/50'}`}>No characters match your current filters or search.</p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 pb-8">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 pb-28">
                     {listCharacters.map((n) => {
                       const isSel = selected === n.id;
                       const hex = FACTION_META[n.faction].hex;

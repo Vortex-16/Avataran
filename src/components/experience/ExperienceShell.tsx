@@ -8,7 +8,19 @@ import AudioDirector from '@/components/experience/AudioDirector';
 import JourneyPage from '@/components/journey/JourneyPage';
 
 export default function ExperienceShell() {
-  const { isReady, heroComplete, setReducedMotion } = useStore();
+  const { isReady, heroComplete, setReducedMotion, setHeroComplete } = useStore();
+
+  // Skip intro film on return visits
+  useEffect(() => {
+    try {
+      const hasVisited = localStorage.getItem('avataran-visited');
+      if (hasVisited === 'true') {
+        setHeroComplete(true);
+      }
+    } catch (e) {
+      // noop
+    }
+  }, [setHeroComplete]);
 
   useEffect(() => {
     // Reduced Motion System Check

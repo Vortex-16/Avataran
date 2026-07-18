@@ -118,10 +118,11 @@ export default function JourneyPage() {
 
   // ── Navigation ────────────────────────────────────────────
   const handleViewChange = useCallback((view: JourneyView) => {
+    closeOverlay();
     setCurrentView(view);
     setActiveKanda(view === 'mandir' ? 'ayodhya-mandir' : timelineData[activeMobileChapterIndex].id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeMobileChapterIndex]);
+  }, [activeMobileChapterIndex, closeOverlay]);
 
   const goToChapter = useCallback((index: number) => {
     setActiveMobileChapterIndex(index);

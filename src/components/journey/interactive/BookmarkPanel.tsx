@@ -105,7 +105,7 @@ export default function BookmarkPanel({ open, isLight, onClose, onOpenKanda }: B
                   </p>
                 </div>
               ) : (
-                <ul className="flex flex-col gap-2">
+                <ul className="flex flex-col gap-2 pb-24">
                   {resolved.map(r => (
                     <li key={r.entry.id}
                       className={`group flex items-start gap-3 rounded-xl border p-3 ${isLight ? 'bg-black/[0.015] border-black/[0.06]' : 'bg-white/[0.02] border-white/[0.05]'}`}>

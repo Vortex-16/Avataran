@@ -87,6 +87,12 @@ export default function HeroFilm() {
     console.log('Begin the Journey clicked! heroComplete state:', heroComplete);
     if (heroComplete) return;
     
+    try {
+      localStorage.setItem('avataran-visited', 'true');
+    } catch (e) {
+      // noop
+    }
+    
     // Crossfade container out to reveal WebGL
     if (containerRef.current) {
       gsap.to(containerRef.current, {
