@@ -6,6 +6,7 @@
 import React from 'react';
 import type { KandaSection } from '@/data/types';
 import type { DrawerStyles } from '../drawerStyles';
+import { useT } from '@/hooks/useT';
 
 interface WeaponsTabProps {
   kanda: KandaSection;
@@ -13,6 +14,7 @@ interface WeaponsTabProps {
 }
 
 export default function WeaponsTab({ kanda, styles }: WeaponsTabProps) {
+  const { t } = useT();
   const { textTitle, textBody, bgCard } = styles;
 
   return (
@@ -30,7 +32,7 @@ export default function WeaponsTab({ kanda, styles }: WeaponsTabProps) {
           <div className="flex-1">
             <p className={`font-display text-sm ${textTitle} uppercase tracking-wide`}>{w.name}</p>
             <p className="font-body text-[9px] uppercase tracking-wider mb-2" style={{ color: kanda.accentHex }}>
-              Wielder: {w.wielder}
+              {t('weapon.wielder')}: {w.wielder}
             </p>
             <p className={`font-body text-xs ${textBody} leading-relaxed`}>{w.description}</p>
           </div>

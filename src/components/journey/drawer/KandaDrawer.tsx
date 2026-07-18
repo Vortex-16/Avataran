@@ -18,6 +18,8 @@ import VersesTab from './tabs/VersesTab';
 import GalleryTab from './tabs/GalleryTab';
 import FactsTab from './tabs/FactsTab';
 import ReferencesTab from './tabs/ReferencesTab';
+import { useT } from '@/hooks/useT';
+import type { TKey } from '@/data/translations';
 
 type TabId =
   | 'events' | 'characters' | 'locations' | 'weapons'
@@ -32,6 +34,7 @@ interface KandaDrawerProps {
 }
 
 export default function KandaDrawer({ kanda, onClose, theme, onOpenReading, onOpenQuiz }: KandaDrawerProps) {
+  const { t } = useT();
   const [tab, setTab] = useState<TabId>('events');
   const [gallery, setGallery] = useState<GalleryItem | null>(null);
   const [displayGallery, setDisplayGallery] = useState<GalleryItem[]>([]);
@@ -69,16 +72,16 @@ export default function KandaDrawer({ kanda, onClose, theme, onOpenReading, onOp
   const borderDrawer = isLight ? 'border-l border-black/10' : 'border-l border-white/[0.06]';
   const borderDivider = isLight ? 'border-black/[0.08]' : 'border-white/[0.04]';
 
-  const tabs: { id: TabId; label: string }[] = [
-    { id: 'events', label: 'Events' },
-    { id: 'characters', label: 'Cast' },
-    { id: 'locations', label: 'Locations' },
-    { id: 'weapons', label: 'Weapons' },
-    { id: 'dialogues', label: 'Dialogues' },
-    { id: 'verses', label: 'Verses' },
-    { id: 'gallery', label: 'Gallery' },
-    { id: 'facts', label: 'Facts' },
-    { id: 'references', label: 'Sources' },
+  const tabs: { id: TabId; labelKey: TKey }[] = [
+    { id: 'events', labelKey: 'tab.events' },
+    { id: 'characters', labelKey: 'tab.characters' },
+    { id: 'locations', labelKey: 'tab.locations' },
+    { id: 'weapons', labelKey: 'tab.weapons' },
+    { id: 'dialogues', labelKey: 'tab.dialogues' },
+    { id: 'verses', labelKey: 'tab.verses' },
+    { id: 'gallery', labelKey: 'tab.gallery' },
+    { id: 'facts', labelKey: 'tab.facts' },
+    { id: 'references', labelKey: 'tab.references' },
   ];
 
   return (
@@ -166,30 +169,30 @@ export default function KandaDrawer({ kanda, onClose, theme, onOpenReading, onOp
                   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  Quiz
+                  {t('drawer.quiz')}
                 </button>
               )}
             </div>
 
             {/* Tab Bar */}
             <div className={`shrink-0 flex items-center gap-0 overflow-x-auto border-b ${isLight ? 'border-black/[0.08]' : 'border-white/[0.05]'} px-4 scrollbar-none`}>
-              {tabs.map(t => {
+              {tabs.map(tb => {
                 // Hide weapons tab if empty
-                if (t.id === 'weapons' && kanda.weapons.length === 0) return null;
+                if (tb.id === 'weapons' && kanda.weapons.length === 0) return null;
                 // Hide verses tab until this Kanda has curated verses
-                if (t.id === 'verses' && !(kanda.featuredVerses && kanda.featuredVerses.length > 0)) return null;
+                if (tb.id === 'verses' && !(kanda.featuredVerses && kanda.featuredVerses.length > 0)) return null;
                 return (
                   <button
-                    key={t.id}
-                    onClick={() => setTab(t.id)}
+                    key={tb.id}
+                    onClick={() => setTab(tb.id)}
                     className={`shrink-0 px-4 py-3 font-body text-[10px] uppercase tracking-[0.2em] font-semibold transition-all duration-200 border-b-2 cursor-pointer ${
-                      tab === t.id
+                      tab === tb.id
                         ? 'border-current text-[#d9a441]'
                         : isLight ? 'border-transparent text-black/35 hover:text-black/70' : 'border-transparent text-[#f4e8d3]/35 hover:text-[#f4e8d3]/70'
                     }`}
-                    style={tab === t.id ? { borderColor: kanda.accentHex, color: kanda.accentHex } : {}}
+                    style={tab === tb.id ? { borderColor: kanda.accentHex, color: kanda.accentHex } : {}}
                   >
-                    {t.label}
+                    {t(tb.labelKey)}
                   </button>
                 );
               })}

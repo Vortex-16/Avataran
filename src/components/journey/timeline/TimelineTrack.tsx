@@ -9,6 +9,7 @@ import React, { RefObject } from 'react';
 import type { KandaSection, TimelineEvent } from '@/data/types';
 import KandaBanner from './KandaBanner';
 import EventCard from './EventCard';
+import { useT } from '@/hooks/useT';
 
 interface TimelineTrackProps {
   visibleKandas: KandaSection[];
@@ -48,6 +49,7 @@ export default function TimelineTrack({
   lallaOutfit,
   setLallaOutfit,
 }: TimelineTrackProps) {
+  const { t } = useT();
   return (
     <div ref={timelinePathRef} className="relative w-full flex flex-col gap-32">
       {/* Vertical path line */}
@@ -100,7 +102,7 @@ export default function TimelineTrack({
               <div className={`text-[10px] font-body uppercase tracking-[0.2em] px-4 py-1.5 rounded-full ${
                 isLight ? 'bg-black/[0.03] text-black/60' : 'bg-white/[0.03] text-[#f4e8d3]/60'
               }`}>
-                Chapter {activeMobileChapterIndex + 1} of 7: <span className="font-bold text-[#ff7900]">{kanda.title}</span>
+                {t('chapter.of', { n: activeMobileChapterIndex + 1 })}: <span className="font-bold text-[#ff7900]">{kanda.title}</span>
               </div>
 
               <div className="flex w-full gap-3 justify-center max-w-[420px]">
@@ -117,7 +119,7 @@ export default function TimelineTrack({
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
-                    <span>Go Back</span>
+                    <span>{t('chapter.back')}</span>
                   </button>
                 )}
 
@@ -133,7 +135,7 @@ export default function TimelineTrack({
                   className="flex-1 py-3 rounded-xl font-body text-[10px] uppercase tracking-widest font-bold text-white transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer bg-gradient-to-r from-[#ff5e00] to-[#ff7900] border-0 hover:shadow-[0_0_20px_rgba(255,94,0,0.4)]"
                   style={{ boxShadow: '0 4px 15px rgba(255,94,0,0.25)' }}
                 >
-                  <span>{activeMobileChapterIndex < 6 ? 'Complete & Next' : 'Enter Ram Mandir'}</span>
+                  <span>{activeMobileChapterIndex < 6 ? t('chapter.next') : t('chapter.enterMandir')}</span>
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>

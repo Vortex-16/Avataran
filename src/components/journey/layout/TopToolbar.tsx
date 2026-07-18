@@ -4,6 +4,7 @@
 // ============================================================
 'use client';
 import React from 'react';
+import { useT } from '@/hooks/useT';
 
 interface TopToolbarProps {
   isLight: boolean;
@@ -13,6 +14,7 @@ interface TopToolbarProps {
 }
 
 export default function TopToolbar({ isLight, dailyStreak, onOpenSearch, onOpenDaily }: TopToolbarProps) {
+  const { t } = useT();
   const btn = `p-3 rounded-full backdrop-blur-md border transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.15)] flex items-center justify-center pointer-events-auto cursor-pointer focus:outline-none ${
     isLight
       ? 'bg-white/80 border-black/10 text-black/70 hover:text-black hover:border-black/25'
@@ -20,16 +22,16 @@ export default function TopToolbar({ isLight, dailyStreak, onOpenSearch, onOpenD
   }`;
 
   return (
-    <div className="fixed top-8 right-[136px] z-40 flex items-center gap-2">
+    <div className="fixed top-8 right-[158px] z-40 flex items-center gap-2">
       {/* Search */}
-      <button onClick={onOpenSearch} className={btn} aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)">
+      <button onClick={onOpenSearch} className={btn} aria-label={`${t('action.search')} (Ctrl+K)`} title={`${t('action.search')} (Ctrl+K)`}>
         <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
         </svg>
       </button>
 
       {/* Daily challenge */}
-      <button onClick={onOpenDaily} className={`relative ${btn}`} aria-label="Daily challenge" title="Daily Challenge">
+      <button onClick={onOpenDaily} className={`relative ${btn}`} aria-label={t('action.daily')} title={t('action.daily')}>
         <svg className="h-5 w-5 text-[#ff9933]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
           <circle cx="12" cy="7" r="5" />

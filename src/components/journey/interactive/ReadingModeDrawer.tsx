@@ -9,6 +9,7 @@ import { getVersesByKanda } from '@/data/verses';
 import { timelineData } from '@/data';
 import type { KandaId } from '@/data/types';
 import BookmarkButton from './BookmarkButton';
+import { useT } from '@/hooks/useT';
 
 interface ReadingModeDrawerProps {
   open: boolean;
@@ -17,6 +18,7 @@ interface ReadingModeDrawerProps {
 }
 
 export default function ReadingModeDrawer({ open, kandaId, onClose }: ReadingModeDrawerProps) {
+  const { t } = useT();
   useEffect(() => {
     function onKey(e: KeyboardEvent) { if (e.key === 'Escape') onClose(); }
     if (open) window.addEventListener('keydown', onKey);
@@ -52,15 +54,15 @@ export default function ReadingModeDrawer({ open, kandaId, onClose }: ReadingMod
           <div className="max-w-2xl mx-auto px-6 py-20">
             {/* Header */}
             <div className="text-center mb-16 flex flex-col items-center gap-3">
-              <span className="font-body text-[10px] uppercase tracking-[0.35em] font-bold text-[#d9a441]">Reading Mode</span>
+              <span className="font-body text-[10px] uppercase tracking-[0.35em] font-bold text-[#d9a441]">{t('reading.mode')}</span>
               <h1 className="font-display text-3xl md:text-4xl uppercase tracking-wider text-[#f4e8d3]">{kanda.title}</h1>
               <p className="font-devanagari text-lg italic text-[#ff9933]/90">{kanda.subtitle}</p>
               <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#d9a441]/60 to-transparent mt-2" />
-              <span className="font-body text-[10px] uppercase tracking-widest text-[#f4e8d3]/40">{verses.length} curated shlokas</span>
+              <span className="font-body text-[10px] uppercase tracking-widest text-[#f4e8d3]/40">{t('reading.count', { n: verses.length })}</span>
             </div>
 
             {verses.length === 0 ? (
-              <p className="text-center font-body text-sm text-[#f4e8d3]/40">Curated verses for this Kanda are coming soon.</p>
+              <p className="text-center font-body text-sm text-[#f4e8d3]/40">{t('drawer.versesSoon')}</p>
             ) : (
               <div className="flex flex-col gap-14">
                 {verses.map(v => (

@@ -7,6 +7,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { timelineData } from '@/data';
 import type { JourneyProgress } from '@/hooks/useProgress';
+import { useT } from '@/hooks/useT';
 
 interface ResumePromptProps {
   show: boolean;
@@ -17,6 +18,7 @@ interface ResumePromptProps {
 }
 
 export default function ResumePrompt({ show, savedProgress, isLight, onStartFresh, onResume }: ResumePromptProps) {
+  const { t } = useT();
   return (
     <AnimatePresence>
       {show && savedProgress && (
@@ -38,13 +40,13 @@ export default function ResumePrompt({ show, savedProgress, isLight, onStartFres
           >
             <div className="flex flex-col gap-2">
               <span className="font-devanagari text-[#ff7900] text-sm uppercase tracking-widest font-bold">
-                शुभ आगमनम् (Welcome Back)
+                {t('resume.welcome')}
               </span>
               <h3 className="font-display text-xl md:text-2xl uppercase tracking-wider">
-                Resume Journey?
+                {t('resume.title')}
               </h3>
               <p className={`font-body text-xs ${isLight ? 'text-black/60' : 'text-[#f4e8d3]/60'} max-w-[320px] mt-2`}>
-                Would you like to continue from where you left off or start a fresh exploration?
+                {t('resume.body')}
               </p>
             </div>
 
@@ -53,7 +55,7 @@ export default function ResumePrompt({ show, savedProgress, isLight, onStartFres
               isLight ? 'bg-black/[0.02] border-black/5' : 'bg-white/[0.02] border-white/5'
             } flex flex-col gap-1 items-center`}>
               <span className={`font-body text-[9px] uppercase tracking-widest ${isLight ? 'text-black/40' : 'text-[#f4e8d3]/40'}`}>
-                Saved Location
+                {t('resume.savedLocation')}
               </span>
               <span className="font-display text-sm uppercase text-[#ff9933] font-bold">
                 {savedProgress.view === 'lifeline'
@@ -72,7 +74,7 @@ export default function ResumePrompt({ show, savedProgress, isLight, onStartFres
                     : 'bg-white/[0.015] border-white/10 text-[#f4e8d3] hover:bg-white/[0.04]'
                 }`}
               >
-                Start Fresh
+                {t('resume.startFresh')}
               </button>
 
               <button
@@ -80,7 +82,7 @@ export default function ResumePrompt({ show, savedProgress, isLight, onStartFres
                 className="flex-1 py-3 rounded-xl font-body text-[10px] uppercase tracking-widest font-bold text-white transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer bg-gradient-to-r from-[#ff5e00] to-[#ff7900] border-0 hover:shadow-[0_0_20px_rgba(255,94,0,0.4)]"
                 style={{ boxShadow: '0 4px 15px rgba(255,94,0,0.25)' }}
               >
-                Continue
+                {t('resume.continue')}
               </button>
             </div>
           </motion.div>

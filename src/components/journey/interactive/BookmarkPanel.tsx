@@ -9,6 +9,7 @@ import { useStore } from '@/app/store';
 import { timelineData, allVerses } from '@/data';
 import { nodeById } from '@/data/characters';
 import type { BookmarkEntry, KandaId } from '@/data/types';
+import { useT } from '@/hooks/useT';
 
 interface BookmarkPanelProps {
   open: boolean;
@@ -41,6 +42,7 @@ function resolve(entry: BookmarkEntry): Resolved {
 }
 
 export default function BookmarkPanel({ open, isLight, onClose, onOpenKanda }: BookmarkPanelProps) {
+  const { t } = useT();
   const bookmarks = useStore(s => s.bookmarks);
   const removeBookmark = useStore(s => s.removeBookmark);
   const clearBookmarks = useStore(s => s.clearBookmarks);
@@ -78,13 +80,13 @@ export default function BookmarkPanel({ open, isLight, onClose, onOpenKanda }: B
             <div className="shrink-0 flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.07)' }}>
               <div className="flex items-center gap-2">
                 <span className="text-[#ff7900]">♥</span>
-                <span className={`font-display text-sm uppercase tracking-wider ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'}`}>Saved ({bookmarks.length})</span>
+                <span className={`font-display text-sm uppercase tracking-wider ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'}`}>{t('saved.title')} ({bookmarks.length})</span>
               </div>
               <div className="flex items-center gap-2">
                 {bookmarks.length > 0 && (
                   <>
-                    <button onClick={exportText} className={`font-body text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-full border cursor-pointer ${isLight ? 'border-black/10 text-black/60 hover:text-black' : 'border-white/10 text-[#f4e8d3]/60 hover:text-[#f4e8d3]'}`}>Export</button>
-                    <button onClick={clearBookmarks} className="font-body text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-red-500/30 text-red-400/80 hover:text-red-400 cursor-pointer">Clear</button>
+                    <button onClick={exportText} className={`font-body text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-full border cursor-pointer ${isLight ? 'border-black/10 text-black/60 hover:text-black' : 'border-white/10 text-[#f4e8d3]/60 hover:text-[#f4e8d3]'}`}>{t('action.export')}</button>
+                    <button onClick={clearBookmarks} className="font-body text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-red-500/30 text-red-400/80 hover:text-red-400 cursor-pointer">{t('action.clear')}</button>
                   </>
                 )}
                 <button onClick={onClose} aria-label="Close" className={`w-7 h-7 rounded-full flex items-center justify-center cursor-pointer ${isLight ? 'text-black/40 hover:text-black' : 'text-white/40 hover:text-white'}`}>
@@ -99,7 +101,7 @@ export default function BookmarkPanel({ open, isLight, onClose, onOpenKanda }: B
                 <div className="flex flex-col items-center justify-center h-full text-center gap-3 px-6">
                   <span className="text-4xl opacity-20">♡</span>
                   <p className={`font-body text-xs ${isLight ? 'text-black/50' : 'text-[#f4e8d3]/50'}`}>
-                    No bookmarks yet. Tap the heart on any verse, event, or character to save it here.
+                    {t('saved.empty')}
                   </p>
                 </div>
               ) : (

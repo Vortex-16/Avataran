@@ -14,12 +14,14 @@ import { useStore } from '@/app/store';
 
 import { useTheme } from '@/hooks/useTheme';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useT } from '@/hooks/useT';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
 import { useProgress } from '@/hooks/useProgress';
 import { useLenis } from '@/hooks/useLenis';
 import { useKandaTracker } from '@/hooks/useKandaTracker';
 
 import ThemeToggle from './layout/ThemeToggle';
+import LanguageToggle from './layout/LanguageToggle';
 import TopToolbar from './layout/TopToolbar';
 import ScrollRing from './layout/ScrollRing';
 import LeftKandaNav from './layout/LeftKandaNav';
@@ -40,6 +42,7 @@ const ReadingModeDrawer = dynamic(() => import('./interactive/ReadingModeDrawer'
 export default function JourneyPage() {
   const { theme, isLight, toggleTheme } = useTheme();
   const isMobile = useIsMobile();
+  const { t } = useT();
   const scrollProgress = useScrollProgress();
   const { savedProgress, showResumePrompt, saveProgress, clearProgress, dismissPrompt } = useProgress();
 
@@ -185,15 +188,15 @@ export default function JourneyPage() {
         {/* Editorial Heading */}
         <div className="text-center mb-20 flex flex-col items-center gap-4 relative z-10">
           <span className="font-devanagari text-[#ff7900] text-sm tracking-[0.3em] uppercase font-bold drop-shadow-[0_2px_8px_rgba(255,121,0,0.35)]">
-            {currentView === 'lifeline' ? 'श्रीमद् रामायणम्' : 'श्रीराम जन्मभूमि'}
+            {currentView === 'lifeline' ? t('heading.eyebrow.lifeline') : t('heading.eyebrow.mandir')}
           </span>
           <h1 className={`font-display text-[2.2rem] md:text-[4rem] ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'} tracking-[0.05em] uppercase leading-none drop-shadow-[0_2px_20px_rgba(217,164,65,0.45)]`}>
-            {currentView === 'lifeline' ? 'The Eternal Path' : 'Divine Homecoming'}
+            {currentView === 'lifeline' ? t('heading.title.lifeline') : t('heading.title.mandir')}
           </h1>
           <p className={`font-body text-xs md:text-sm ${isLight ? 'text-[#3a3229]/65' : 'text-[#f4e8d3]/50'} max-w-[450px] uppercase tracking-[0.2em] leading-relaxed px-4`}>
             {currentView === 'lifeline'
-              ? (isMobile ? "Follow Lord Ram's journey of absolute Dharma — stage by stage" : "Scroll to follow Lord Ram's journey of absolute Dharma — all Seven Kandas")
-              : "Explore the architectural marvel, sacred ghats, and child-deity of modern Ayodhya"
+              ? (isMobile ? t('heading.sub.lifeline.mobile') : t('heading.sub.lifeline.desktop'))
+              : t('heading.sub.mandir')
             }
           </p>
           <div className="w-[100px] h-[1px] bg-gradient-to-r from-transparent via-[#ff5e00]/50 to-transparent mt-4" />
@@ -221,6 +224,7 @@ export default function JourneyPage() {
 
       {/* Fixed UI */}
       <ThemeToggle isLight={isLight} onToggle={toggleTheme} />
+      <LanguageToggle isLight={isLight} />
       <TopToolbar
         isLight={isLight}
         dailyStreak={dailyStreak}

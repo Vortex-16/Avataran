@@ -8,6 +8,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { verseDatabases } from '@/data/verses';
 import type { KandaId, VerseEntry } from '@/data/types';
+import { useT } from '@/hooks/useT';
 
 interface SlokaOfTheDayProps {
   isLight: boolean;
@@ -19,6 +20,7 @@ const flat: { verse: VerseEntry; kandaId: KandaId }[] = verseDatabases.flatMap(d
 );
 
 export default function SlokaOfTheDay({ isLight, onOpenKanda }: SlokaOfTheDayProps) {
+  const { t } = useT();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -60,7 +62,7 @@ export default function SlokaOfTheDay({ isLight, onOpenKanda }: SlokaOfTheDayPro
           >
             <div className="flex items-center justify-between px-4 py-2.5 border-b" style={{ borderColor: isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)' }}>
               <span className="font-body text-[9px] uppercase tracking-[0.25em] font-bold text-[#ff7900]">
-                ✦ Shloka of the Day
+                ✦ {t('sloka.title')}
               </span>
               <button
                 onClick={() => setOpen(false)}
@@ -87,13 +89,13 @@ export default function SlokaOfTheDay({ isLight, onOpenKanda }: SlokaOfTheDayPro
                     onClick={share}
                     className={`px-2.5 py-1 rounded-full font-body text-[9px] uppercase tracking-wider font-semibold border transition-all cursor-pointer ${isLight ? 'border-black/10 text-black/60 hover:text-black' : 'border-white/10 text-[#f4e8d3]/60 hover:text-[#f4e8d3]'}`}
                   >
-                    {copied ? 'Copied!' : 'Share'}
+                    {copied ? t('action.copied') : t('action.share')}
                   </button>
                   <button
                     onClick={() => onOpenKanda(kandaId)}
                     className="px-2.5 py-1 rounded-full font-body text-[9px] uppercase tracking-wider font-bold text-white border-0 cursor-pointer bg-gradient-to-r from-[#ff5e00] to-[#ff7900] hover:shadow-[0_0_14px_rgba(255,94,0,0.4)] transition-all"
                   >
-                    Read
+                    {t('action.read')}
                   </button>
                 </div>
               </div>
@@ -109,7 +111,7 @@ export default function SlokaOfTheDay({ isLight, onOpenKanda }: SlokaOfTheDayPro
             className={`flex items-center gap-2 px-3.5 py-2 rounded-full border backdrop-blur-xl shadow-lg cursor-pointer ${panelBg}`}
           >
             <span className="text-[#ff7900] text-sm">✦</span>
-            <span className={`font-body text-[9px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-black/70' : 'text-[#f4e8d3]/70'}`}>Shloka of the Day</span>
+            <span className={`font-body text-[9px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-black/70' : 'text-[#f4e8d3]/70'}`}>{t('sloka.title')}</span>
           </motion.button>
         )}
       </AnimatePresence>

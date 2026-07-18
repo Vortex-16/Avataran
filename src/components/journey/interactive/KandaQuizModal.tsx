@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { timelineData } from '@/data';
 import type { KandaId, QuizQuestion } from '@/data/types';
 import { useStore, QuizMode } from '@/app/store';
+import { useT } from '@/hooks/useT';
 
 const ALL_QUESTIONS: QuizQuestion[] = timelineData.flatMap(k => k.quizQuestions ?? []);
 
@@ -34,6 +35,7 @@ function seededShuffle<T>(arr: T[], seed: number): T[] {
 }
 
 export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }: KandaQuizModalProps) {
+  const { t } = useT();
   const recordKandaQuiz = useStore(s => s.recordKandaQuiz);
   const recordDailyChallenge = useStore(s => s.recordDailyChallenge);
   const dailyStreak = useStore(s => s.quizStats.dailyStreak);
@@ -45,11 +47,11 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
   const [done, setDone] = useState(false);
 
   const title = useMemo(() => {
-    if (mode === 'daily') return 'Daily Challenge';
-    if (mode === 'grand') return 'Grand Ramayana Challenge';
+    if (mode === 'daily') return t('quiz.daily');
+    if (mode === 'grand') return t('quiz.grand');
     const k = timelineData.find(k => k.id === kandaId);
-    return k ? `${k.title} Quiz` : 'Kanda Quiz';
-  }, [mode, kandaId]);
+    return k ? `${k.title} — ${t('quiz.kanda')}` : t('quiz.kanda');
+  }, [mode, kandaId, t]);
 
   useEffect(() => {
     if (!open) return;
@@ -120,7 +122,7 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
 
           <div className="p-5">
             {total === 0 ? (
-              <p className={`font-body text-xs text-center py-8 ${isLight ? 'text-black/40' : 'text-white/40'}`}>No questions available yet.</p>
+              <p className={`font-body text-xs text-center py-8 ${isLight ? 'text-black/40' : 'text-white/40'}`}>{t('quiz.none')}</p>
             ) : done ? (
               // ── Result screen ──
               <div className="flex flex-col items-center gap-4 py-4 text-center">
@@ -132,13 +134,13 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
                   <span className="absolute inset-0 flex items-center justify-center font-display text-xl">{pct}%</span>
                 </div>
                 <p className={`font-display text-lg uppercase tracking-wide ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'}`}>
-                  {score} / {total} correct
+                  {t('quiz.correct', { score, total })}
                 </p>
                 <p className={`font-body text-xs max-w-[280px] ${isLight ? 'text-[#3a3229]/80' : 'text-[#f4e8d3]/70'}`}>
-                  {pct === 100 ? 'Flawless! A true scholar of the Ramayana.' : pct >= 60 ? 'Well done — your knowledge shines.' : 'Keep exploring the Kandas and try again.'}
+                  {pct === 100 ? t('quiz.flawless') : pct >= 60 ? t('quiz.good') : t('quiz.tryAgain')}
                 </p>
                 <button onClick={onClose} className="mt-2 px-6 py-2.5 rounded-xl font-body text-[10px] uppercase tracking-widest font-bold text-white cursor-pointer bg-gradient-to-r from-[#ff5e00] to-[#ff7900] hover:shadow-[0_0_18px_rgba(255,94,0,0.4)] transition-all border-none">
-                  Close
+                  {t('action.close')}
                 </button>
               </div>
             ) : q ? (
@@ -146,7 +148,7 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                   <span className={`font-body text-[9px] uppercase tracking-widest ${isLight ? 'text-black/45' : 'text-white/45'}`}>
-                    {mode === 'daily' ? `Streak: ${dailyStreak} 🔥` : `Question ${i + 1} of ${total}`}
+                    {mode === 'daily' ? `${t('quiz.streak', { n: dailyStreak })} 🔥` : t('quiz.question', { n: i + 1, total })}
                   </span>
                   <span className="font-body text-[9px] uppercase tracking-widest px-2 py-0.5 rounded-full border" style={{ borderColor: '#ff790055', color: '#ff7900' }}>
                     {q.difficulty}
@@ -197,7 +199,7 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
                   <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
                     className={`rounded-xl border p-3 ${isLight ? 'bg-[#ff7900]/[0.03] border-[#ff7900]/15 text-[#3a3229]' : 'bg-[#ff7900]/[0.05] border-[#ff7900]/15 text-[#f4e8d3]'}`}>
                     <p className="font-body text-[11px] leading-relaxed opacity-90">
-                      <span className="text-[#ff9933] font-semibold">Why: </span>{q.explanation}
+                      <span className="text-[#ff9933] font-semibold">{t('quiz.why')} </span>{q.explanation}
                     </p>
                   </motion.div>
                 )}
@@ -212,7 +214,7 @@ export default function KandaQuizModal({ open, isLight, mode, kandaId, onClose }
                         : 'cursor-pointer text-white bg-gradient-to-r from-[#ff5e00] to-[#ff7900] hover:shadow-[0_0_18px_rgba(255,94,0,0.4)] border-none'
                     }`}
                   >
-                    {i + 1 >= total ? 'Finish' : 'Next'}
+                    {i + 1 >= total ? t('quiz.finish') : t('quiz.next')}
                   </button>
                 </div>
               </div>

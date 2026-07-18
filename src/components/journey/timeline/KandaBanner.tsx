@@ -5,6 +5,7 @@
 'use client';
 import React from 'react';
 import type { KandaSection } from '@/data/types';
+import { useT } from '@/hooks/useT';
 
 interface KandaBannerProps {
   kanda: KandaSection;
@@ -14,6 +15,7 @@ interface KandaBannerProps {
 }
 
 export default function KandaBanner({ kanda, isLight, isOpen, onClick }: KandaBannerProps) {
+  const { t } = useT();
   return (
     <div className="w-full flex justify-center text-center relative md:px-12">
       <button
@@ -55,7 +57,7 @@ export default function KandaBanner({ kanda, isLight, isOpen, onClick }: KandaBa
             boxShadow: `0 4px 12px ${kanda.accentHex}08`
           }}
         >
-          <span>Explore full chapter</span>
+          <span>{t('timeline.explore')}</span>
           <svg className="w-3 h-3 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>

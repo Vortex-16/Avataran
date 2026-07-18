@@ -1,5 +1,8 @@
 import { create } from 'zustand';
 import type { BookmarkEntry } from '@/data/types';
+import type { Lang } from '@/data/translations';
+
+const LANG_KEY = 'avataran-lang';
 
 export type QualityTier = 'high' | 'balanced' | 'lightweight';
 export type KandaId = 'bala' | 'ayodhya' | 'aranya' | 'kishkindha' | 'sundara' | 'yuddha' | 'uttara' | 'ayodhya-mandir';
@@ -118,6 +121,11 @@ interface ExperienceState {
   closeOverlay: () => void;
   openQuiz: (mode: QuizMode, kandaId?: KandaId | null) => void;
   openReading: (kandaId: KandaId) => void;
+
+  // ── Language (i18n) ──
+  lang: Lang;
+  setLang: (lang: Lang) => void;
+  toggleLang: () => void;
 }
 
 export const useStore = create<ExperienceState>((set) => ({
@@ -167,6 +175,7 @@ export const useStore = create<ExperienceState>((set) => ({
   hydrateInteractive: () => set({
     bookmarks: loadJSON<BookmarkEntry[]>(BOOKMARKS_KEY, []),
     quizStats: loadJSON<QuizStats>(QUIZ_KEY, emptyQuizStats),
+    lang: (typeof window !== 'undefined' && (localStorage.getItem(LANG_KEY) as Lang)) || 'en',
   }),
 
   addBookmark: (entry) => set((state) => {
@@ -224,4 +233,16 @@ export const useStore = create<ExperienceState>((set) => ({
   closeOverlay: () => set({ activeOverlay: 'none' }),
   openQuiz: (mode, kandaId = null) => set({ activeOverlay: 'quiz', quizMode: mode, quizKandaId: kandaId }),
   openReading: (kandaId) => set({ activeOverlay: 'reading', readingKandaId: kandaId }),
+
+  // ── Language (i18n) ──
+  lang: 'en',
+  setLang: (lang) => {
+    if (typeof window !== 'undefined') { try { localStorage.setItem(LANG_KEY, lang); } catch { /* noop */ } }
+    set({ lang });
+  },
+  toggleLang: () => set((state) => {
+    const next: Lang = state.lang === 'en' ? 'hi' : 'en';
+    if (typeof window !== 'undefined') { try { localStorage.setItem(LANG_KEY, next); } catch { /* noop */ } }
+    return { lang: next };
+  }),
 }));

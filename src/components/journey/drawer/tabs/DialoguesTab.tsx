@@ -6,6 +6,7 @@
 import React from 'react';
 import type { KandaSection } from '@/data/types';
 import type { DrawerStyles } from '../drawerStyles';
+import { useT } from '@/hooks/useT';
 
 interface DialoguesTabProps {
   kanda: KandaSection;
@@ -13,6 +14,7 @@ interface DialoguesTabProps {
 }
 
 export default function DialoguesTab({ kanda, styles }: DialoguesTabProps) {
+  const { t } = useT();
   const { isLight, textMuted, bgCard, borderDivider } = styles;
 
   return (
@@ -29,10 +31,10 @@ export default function DialoguesTab({ kanda, styles }: DialoguesTabProps) {
             {d.sanskrit}
           </p>
           <p className={`font-body text-xs ${isLight ? 'text-[#3a3229]/80' : 'text-[#f4e8d3]/55'} leading-relaxed border-t ${borderDivider} pt-3`}>
-            <span className="text-[#d9a441] font-semibold">Translation:</span> {d.translation}
+            <span className="text-[#d9a441] font-semibold">{t('verse.translation')}:</span> {d.translation}
           </p>
           <p className={`font-body text-[10px] ${textMuted} italic leading-relaxed`}>
-            Context: {d.context}
+            {t('dialogue.context')}: {d.context}
           </p>
         </div>
       ))}

@@ -8,6 +8,7 @@ import React from 'react';
 import type { KandaSection } from '@/data/types';
 import type { DrawerStyles } from '../drawerStyles';
 import BookmarkButton from '../../interactive/BookmarkButton';
+import { useT } from '@/hooks/useT';
 
 interface VersesTabProps {
   kanda: KandaSection;
@@ -16,6 +17,7 @@ interface VersesTabProps {
 }
 
 export default function VersesTab({ kanda, styles, onOpenReading }: VersesTabProps) {
+  const { t } = useT();
   const { isLight, textTitle, textBody, textMuted, textMutedLess, bgCard, borderDivider } = styles;
   const verses = kanda.featuredVerses ?? [];
 
@@ -23,7 +25,7 @@ export default function VersesTab({ kanda, styles, onOpenReading }: VersesTabPro
     return (
       <div className={`p-6 rounded-xl border ${bgCard} text-center`}>
         <p className={`font-body text-xs ${textMuted} leading-relaxed`}>
-          Curated shlokas for this Kanda are coming soon.
+          {t('drawer.versesSoon')}
         </p>
       </div>
     );
@@ -39,7 +41,7 @@ export default function VersesTab({ kanda, styles, onOpenReading }: VersesTabPro
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
           </svg>
-          Enter Reading Mode
+          {t('drawer.enterReading')}
         </button>
       )}
       {verses.map(v => (
@@ -67,7 +69,7 @@ export default function VersesTab({ kanda, styles, onOpenReading }: VersesTabPro
           )}
 
           <p className={`font-body text-xs ${textBody} leading-relaxed border-t ${borderDivider} pt-3`}>
-            <span className="text-[#d9a441] font-semibold">Translation:</span> {v.translation}
+            <span className="text-[#d9a441] font-semibold">{t('verse.translation')}:</span> {v.translation}
           </p>
 
           {v.commentary && (

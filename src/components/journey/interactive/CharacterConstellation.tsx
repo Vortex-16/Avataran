@@ -14,6 +14,8 @@ import {
 } from '@/data/characters';
 import type { KandaId } from '@/data/types';
 import BookmarkButton from './BookmarkButton';
+import { useT } from '@/hooks/useT';
+import { FACTION_LABELS, RELATION_LABELS } from '@/data/translations';
 
 interface CharacterConstellationProps {
   open: boolean;
@@ -68,10 +70,11 @@ const LAYOUT: Record<string, { x: number; y: number }> = (() => {
 })();
 
 export default function CharacterConstellation({ open, isLight, onClose, onOpenKanda }: CharacterConstellationProps) {
+  const { t, lang } = useT();
   const [selected, setSelected] = useState<string | null>(null);
   const [factionFilter, setFactionFilter] = useState<CharacterFaction | 'all'>('all');
   const [relationFilter, setRelationFilter] = useState<RelationType | 'all'>('all');
-  
+
   // Modern Layout / Mobile Toggles
   const [viewMode, setViewMode] = useState<'graph' | 'list'>('graph');
   const [searchQuery, setSearchQuery] = useState('');
@@ -88,7 +91,12 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setIsMobile('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    const touch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const small = window.innerWidth < 768;
+    setIsMobile(touch);
+    // The pan/zoom graph is awkward on phones — default small screens to the
+    // clean directory grid, which is inherently mobile-friendly.
+    if (small) setViewMode('list');
   }, []);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -281,7 +289,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
           <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-b" style={{ borderColor: isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.07)' }}>
             <div className="flex items-center gap-2">
               <span className="text-[#ff7900]">✦</span>
-              <span className={`font-display text-sm uppercase tracking-wider ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'}`}>Character Constellation</span>
+              <span className={`font-display text-sm uppercase tracking-wider ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'}`}>{t('constellation.title')}</span>
             </div>
 
             {/* Controls: Search + Toggle + Reset + Close */}
@@ -290,7 +298,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
               <div className="relative flex items-center">
                 <input
                   type="text"
-                  placeholder="Search character..."
+                  placeholder={t('constellation.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className={`w-36 sm:w-48 pl-7 pr-7 py-1 rounded-full border text-[10px] font-body outline-none transition-all ${
@@ -317,7 +325,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
                       : isLight ? 'text-black/50 hover:text-black' : 'text-[#f4e8d3]/50 hover:text-[#f4e8d3]'
                   }`}
                 >
-                  Graph
+                  {t('constellation.graph')}
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
@@ -327,7 +335,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
                       : isLight ? 'text-black/50 hover:text-black' : 'text-[#f4e8d3]/50 hover:text-[#f4e8d3]'
                   }`}
                 >
-                  List
+                  {t('constellation.list')}
                 </button>
               </div>
 
@@ -355,7 +363,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
           <div className={`shrink-0 px-5 py-2.5 border-b flex flex-col gap-2.5 ${isLight ? 'bg-black/[0.01]' : 'bg-white/[0.01]'}`} style={{ borderColor: isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)' }}>
             {/* Factions */}
             <div className="flex items-center gap-3 overflow-hidden">
-              <span className={`font-body text-[8px] uppercase tracking-widest font-bold shrink-0 w-14 ${isLight ? 'text-[#3a3229]/50' : 'text-[#f4e8d3]/45'}`}>Factions</span>
+              <span className={`font-body text-[8px] uppercase tracking-widest font-bold shrink-0 w-14 ${isLight ? 'text-[#3a3229]/50' : 'text-[#f4e8d3]/45'}`}>{lang === 'hi' ? 'कुल' : 'Factions'}</span>
               <div className="flex-1 flex gap-1.5 overflow-x-auto no-scrollbar py-0.5 scroll-smooth">
                 {['all', ...FACTIONS].map((f) => {
                   const isActive = factionFilter === f;
@@ -383,7 +391,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
                           style={{ borderColor: isActive ? hex : 'transparent' }}
                         />
                       )}
-                      <span className="relative z-10">{f === 'all' ? 'All Factions' : FACTION_META[f as CharacterFaction].label}</span>
+                      <span className="relative z-10">{f === 'all' ? t('constellation.allFactions') : FACTION_LABELS[lang][f]}</span>
                       {isActive && (
                         <motion.span
                           layoutId="active-faction"
@@ -400,7 +408,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
 
             {/* Bonds */}
             <div className="flex items-center gap-3 overflow-hidden">
-              <span className={`font-body text-[8px] uppercase tracking-widest font-bold shrink-0 w-14 ${isLight ? 'text-[#3a3229]/50' : 'text-[#f4e8d3]/45'}`}>Bonds</span>
+              <span className={`font-body text-[8px] uppercase tracking-widest font-bold shrink-0 w-14 ${isLight ? 'text-[#3a3229]/50' : 'text-[#f4e8d3]/45'}`}>{t('constellation.bonds')}</span>
               <div className="flex-1 flex gap-1.5 overflow-x-auto no-scrollbar py-0.5 scroll-smooth">
                 {RELATION_TYPES.map((r) => {
                   const isActive = relationFilter === r;
@@ -428,7 +436,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
                           style={{ borderColor: isActive ? hex : 'transparent' }}
                         />
                       )}
-                      <span className="relative z-10">{r === 'all' ? 'All Bonds' : RELATION_META[r as RelationType].label}</span>
+                      <span className="relative z-10">{r === 'all' ? t('constellation.allBonds') : RELATION_LABELS[lang][r]}</span>
                       {isActive && (
                         <motion.span
                           layoutId="active-bond"
@@ -550,7 +558,9 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
                 {/* Micro-Overlay Controls inside Graph */}
                 <div className="absolute bottom-4 left-4 flex gap-2">
                   <div className={`text-[9px] font-body uppercase tracking-wider px-3 py-1.5 rounded-full border ${isLight ? 'bg-white/80 border-black/10 text-black/60 shadow-sm' : 'bg-black/80 border-white/10 text-[#f4e8d3]/60 shadow-md'}`}>
-                    {isMobile ? 'Touch: Drag to Pan · Pinch to Zoom' : 'Mouse: Left-Click & Drag to Pan · Scroll to Zoom'}
+                    {isMobile
+                      ? (lang === 'hi' ? 'स्पर्श: खींचें · चुटकी से ज़ूम' : 'Touch: Drag to Pan · Pinch to Zoom')
+                      : (lang === 'hi' ? 'माउस: खींचकर घुमाएँ · स्क्रॉल से ज़ूम' : 'Mouse: Drag to Pan · Scroll to Zoom')}
                   </div>
                 </div>
               </div>
@@ -638,15 +648,15 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
 
                     {/* Faction Badge */}
                     <div className="flex items-center gap-2">
-                      <span className="font-body text-[8px] uppercase tracking-widest opacity-45">Faction:</span>
+                      <span className="font-body text-[8px] uppercase tracking-widest opacity-45">{lang === 'hi' ? 'कुल:' : 'Faction:'}</span>
                       <span className="font-body text-[8px] uppercase tracking-widest font-semibold px-2.5 py-0.5 rounded-full border" style={{ color: FACTION_META[detail.faction].hex, borderColor: `${FACTION_META[detail.faction].hex}40`, background: `${FACTION_META[detail.faction].hex}10` }}>
-                        {FACTION_META[detail.faction].label}
+                        {FACTION_LABELS[lang][detail.faction]}
                       </span>
                     </div>
 
                     {/* Book Appearances */}
                     <div className="flex flex-col gap-1.5">
-                      <p className={`font-body text-[8px] uppercase tracking-widest opacity-45`}>Chapters</p>
+                      <p className={`font-body text-[8px] uppercase tracking-widest opacity-45`}>{t('constellation.appearsIn')}</p>
                       <div className="flex flex-wrap gap-1">
                         {detail.kandas.map((k) => (
                           <button
@@ -666,7 +676,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
 
                     {/* Relationships / Bonds */}
                     <div>
-                      <p className={`font-body text-[8px] uppercase tracking-widest mb-2 opacity-45`}>Bonds</p>
+                      <p className={`font-body text-[8px] uppercase tracking-widest mb-2 opacity-45`}>{t('constellation.bonds')}</p>
                       <div className="flex flex-col gap-1.5">
                         {relationshipEdges.filter(e => e.from === detail.id || e.to === detail.id).map((e, idx) => {
                           const otherId = e.from === detail.id ? e.to : e.from;
@@ -688,7 +698,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
                             >
                               <span className={`font-body text-[10px] ${isLight ? 'text-[#2b251f]' : 'text-[#f4e8d3]/85'}`}>{other.name}</span>
                               <span className="font-body text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded-full" style={{ color: RELATION_META[e.type].hex, background: `${RELATION_META[e.type].hex}12` }}>
-                                {e.label ?? RELATION_META[e.type].label}
+                                {e.label ?? RELATION_LABELS[lang][e.type]}
                               </span>
                             </button>
                           );

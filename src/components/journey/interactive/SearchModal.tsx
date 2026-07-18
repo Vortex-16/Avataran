@@ -8,6 +8,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { timelineData, allVerses } from '@/data';
 import type { KandaId } from '@/data/types';
+import { useT } from '@/hooks/useT';
+import type { TKey } from '@/data/translations';
 
 type ResultType = 'kanda' | 'event' | 'character' | 'verse';
 
@@ -54,10 +56,6 @@ const INDEX: SearchItem[] = (() => {
   return items;
 })();
 
-const TYPE_BADGE: Record<ResultType, string> = {
-  kanda: 'Kanda', event: 'Event', character: 'Character', verse: 'Verse',
-};
-
 interface SearchModalProps {
   open: boolean;
   isLight: boolean;
@@ -66,6 +64,7 @@ interface SearchModalProps {
 }
 
 export default function SearchModal({ open, isLight, onClose, onNavigate }: SearchModalProps) {
+  const { t } = useT();
   const [query, setQuery] = useState('');
   const [sel, setSel] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -138,7 +137,7 @@ export default function SearchModal({ open, isLight, onClose, onNavigate }: Sear
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 onKeyDown={onKeyDown}
-                placeholder="Search Ram, Hanuman, Ayodhya, verses…"
+                placeholder={t('search.placeholder')}
                 className={`flex-1 bg-transparent outline-none font-body text-sm ${isLight ? 'text-[#1c1814] placeholder-black/35' : 'text-[#f4e8d3] placeholder-white/30'}`}
               />
               <kbd className={`hidden md:inline font-body text-[9px] uppercase tracking-wider px-2 py-1 rounded border ${isLight ? 'border-black/10 text-black/40' : 'border-white/10 text-white/40'}`}>Esc</kbd>
@@ -148,11 +147,11 @@ export default function SearchModal({ open, isLight, onClose, onNavigate }: Sear
             <div className="max-h-[52vh] overflow-y-auto overscroll-contain">
               {query.trim() === '' ? (
                 <p className={`px-5 py-8 text-center font-body text-xs ${isLight ? 'text-black/40' : 'text-[#f4e8d3]/40'}`}>
-                  Type to search across all seven Kandas — events, characters, and verses.
+                  {t('search.empty')}
                 </p>
               ) : results.length === 0 ? (
                 <p className={`px-5 py-8 text-center font-body text-xs ${isLight ? 'text-black/40' : 'text-[#f4e8d3]/40'}`}>
-                  No results for “{query}”.
+                  {t('search.noResults', { q: query })}
                 </p>
               ) : (
                 <ul className="py-2">
@@ -169,7 +168,7 @@ export default function SearchModal({ open, isLight, onClose, onNavigate }: Sear
                           className="shrink-0 font-body text-[8px] uppercase tracking-wider font-bold px-2 py-1 rounded-full border"
                           style={{ color: accent(r.type), borderColor: `${accent(r.type)}55`, background: `${accent(r.type)}12` }}
                         >
-                          {TYPE_BADGE[r.type]}
+                          {t(`search.type.${r.type}` as TKey)}
                         </span>
                         <span className="min-w-0 flex-1">
                           <span className={`block font-body text-xs font-semibold truncate ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'}`}>

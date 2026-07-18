@@ -11,6 +11,7 @@ import DeepotsavCard from '../special/DeepotsavCard';
 import MandirCard from '../special/MandirCard';
 import GarbhagrihaCard from '../special/GarbhagrihaCard';
 import BookmarkButton from '../interactive/BookmarkButton';
+import { useT } from '@/hooks/useT';
 
 interface EventCardProps {
   event: TimelineEvent;
@@ -36,6 +37,7 @@ export default function EventCard({
   lallaOutfit,
   setLallaOutfit,
 }: EventCardProps) {
+  const { t } = useT();
   const isEven = idx % 2 === 0;
 
   return (
@@ -88,7 +90,7 @@ export default function EventCard({
                   boxShadow: `0 0 12px ${kanda.accentHex}30`,
                 }}
               >
-                ◈ Turning Point
+                ◈ {t('timeline.turningPoint')}
               </div>
             )}
 

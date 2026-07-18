@@ -6,6 +6,8 @@
 'use client';
 import React from 'react';
 import PixelTransition from '../PixelTransition';
+import { useT } from '@/hooks/useT';
+import type { TKey } from '@/data/translations';
 
 interface GarbhagrihaCardProps {
   isLight: boolean;
@@ -14,15 +16,16 @@ interface GarbhagrihaCardProps {
 }
 
 const OUTFITS = [
-  { id: 'shringaar', label: 'Shringaar' },
-  { id: 'saffron', label: 'Saffron' },
-  { id: 'yellow', label: 'Yellow' },
-  { id: 'flowers', label: 'Pushpa' },
-  { id: 'lotus', label: 'Lotus' },
-  { id: 'milk', label: 'Abhisheka' },
+  { id: 'shringaar' },
+  { id: 'saffron' },
+  { id: 'yellow' },
+  { id: 'flowers' },
+  { id: 'lotus' },
+  { id: 'milk' },
 ];
 
 export default function GarbhagrihaCard({ isLight, lallaOutfit, setLallaOutfit }: GarbhagrihaCardProps) {
+  const { t } = useT();
   return (
     <div className="mt-2 flex flex-col gap-4">
       <div className={`relative w-full aspect-[4/5] rounded-xl border ${isLight ? 'border-black/5 bg-black/10' : 'border-white/5 bg-black/40'} overflow-hidden shadow-inner`}>
@@ -38,7 +41,7 @@ export default function GarbhagrihaCard({ isLight, lallaOutfit, setLallaOutfit }
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/20 pointer-events-none" />
         <span className={`absolute bottom-3 left-1/2 -translate-x-1/2 font-display text-[9px] tracking-widest text-[#d9a441] uppercase bg-black/45 px-3 py-1 rounded-full border ${isLight ? 'border-black/10' : 'border-white/5'} backdrop-blur-sm whitespace-nowrap`}>
-          {lallaOutfit === 'milk' ? 'Ksheera Abhishekam' : `${lallaOutfit} Alankaram`}
+          {lallaOutfit === 'milk' ? t('lalla.abhishekam') : t('lalla.alankaram', { outfit: t(`lalla.${lallaOutfit}` as TKey) })}
         </span>
       </div>
       <div className="grid grid-cols-3 gap-1.5">
@@ -52,7 +55,7 @@ export default function GarbhagrihaCard({ isLight, lallaOutfit, setLallaOutfit }
                 : isLight ? 'bg-black/[0.02] border border-black/5 text-black/40 hover:text-black/80' : 'bg-white/[0.02] border border-white/5 text-[#f4e8d3]/40 hover:text-[#f4e8d3]/80'
             }`}
           >
-            {btn.label}
+            {t(`lalla.${btn.id}` as TKey)}
           </button>
         ))}
       </div>

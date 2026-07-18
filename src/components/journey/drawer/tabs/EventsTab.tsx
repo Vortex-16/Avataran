@@ -6,6 +6,7 @@
 import React from 'react';
 import type { KandaSection } from '@/data/types';
 import type { DrawerStyles } from '../drawerStyles';
+import { useT } from '@/hooks/useT';
 
 interface EventsTabProps {
   kanda: KandaSection;
@@ -13,6 +14,7 @@ interface EventsTabProps {
 }
 
 export default function EventsTab({ kanda, styles }: EventsTabProps) {
+  const { t } = useT();
   const { isLight, textTitle, textBody, textMutedLess, bgCard, borderDivider } = styles;
 
   return (
@@ -35,7 +37,7 @@ export default function EventsTab({ kanda, styles }: EventsTabProps) {
                 className="absolute top-2 right-2 font-body text-[8px] uppercase tracking-widest px-2 py-0.5 rounded-full border font-bold"
                 style={{ borderColor: kanda.accentHex, color: kanda.accentHex, background: `${kanda.accentHex}18` }}
               >
-                Turning Point
+                {t('timeline.turningPoint')}
               </span>
             )}
             <div className="absolute bottom-2 left-3">
@@ -68,7 +70,7 @@ export default function EventsTab({ kanda, styles }: EventsTabProps) {
             )}
             {ev.weapon && (
               <div className="flex items-center gap-2 mt-2">
-                <span className={`font-body text-[9px] uppercase tracking-wider ${textMutedLess}`}>Weapon</span>
+                <span className={`font-body text-[9px] uppercase tracking-wider ${textMutedLess}`}>{t('event.weapon')}</span>
                 <span
                   className="font-body text-[9px] uppercase tracking-wider font-bold"
                   style={{ color: kanda.accentHex }}

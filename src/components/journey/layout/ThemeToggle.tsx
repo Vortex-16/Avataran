@@ -14,7 +14,7 @@ export default function ThemeToggle({ isLight, onToggle }: ThemeToggleProps) {
   return (
     <button
       onClick={onToggle}
-      className={`fixed top-8 right-[80px] z-40 p-3 rounded-full backdrop-blur-md border transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.15)] flex items-center justify-center pointer-events-auto cursor-pointer focus:outline-none ${
+      className={`fixed top-8 right-[96px] z-40 p-3 rounded-full backdrop-blur-md border transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.15)] flex items-center justify-center pointer-events-auto cursor-pointer focus:outline-none ${
         isLight
           ? 'bg-white/80 border-black/10 text-black hover:bg-white hover:border-black/25'
           : 'bg-[#14110b]/80 border-[#d05c43]/20 text-[#f4e8d3]/80 hover:text-[#f4e8d3] hover:border-[#d05c43]/50'
