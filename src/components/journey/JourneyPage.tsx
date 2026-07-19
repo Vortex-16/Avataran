@@ -39,7 +39,7 @@ const CharacterConstellation = dynamic(() => import('./interactive/CharacterCons
 const BookmarkPanel = dynamic(() => import('./interactive/BookmarkPanel'), { ssr: false });
 const ReadingModeDrawer = dynamic(() => import('./interactive/ReadingModeDrawer'), { ssr: false });
 const ReelsFeedModal = dynamic(() => import('./interactive/ReelsFeedModal'), { ssr: false });
-const SocialChatPanel = dynamic(() => import('./interactive/SocialChatPanel'), { ssr: false });
+const SocialChatPanel = dynamic(() => import('./interactive/SocialChatPanelWS'), { ssr: false });
 
 export default function JourneyPage() {
   const { theme, isLight, toggleTheme } = useTheme();

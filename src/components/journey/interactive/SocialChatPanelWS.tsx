@@ -37,8 +37,8 @@ export default function SocialChatPanelWS({ open, isLight, onClose }: SocialChat
   useEffect(() => {
     if (!open) return;
 
-    // Connect to WebSocket server behind Nginx load-balancer on Port 80
-    const ws = new WebSocket('ws://localhost:80');
+    // Connect to WebSocket server behind Nginx load-balancer on Render
+    const ws = new WebSocket('wss://avataran-chat.onrender.com');
     socketRef.current = ws;
 
     ws.onmessage = (event) => {
