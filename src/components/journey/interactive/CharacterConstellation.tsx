@@ -31,22 +31,22 @@ const H = 1200;
 
 const FACTION_PORTRAITS: Record<CharacterFaction | 'all', string | null> = {
   all: null,
-  ayodhya: '/assets/character_ram.png',
-  sage: '/assets/character_vishwamitra.png',
-  vanara: '/assets/character_hanuman.png',
-  lanka: '/assets/character_ravana.png',
-  divine: '/assets/character_valmiki.png',
+  ayodhya: '/assets/character_ram.jpg',
+  sage: '/assets/character_vishwamitra.jpg',
+  vanara: '/assets/character_hanuman.jpg',
+  lanka: '/assets/character_ravana.jpg',
+  divine: '/assets/character_valmiki.jpg',
 };
 
 const RELATION_TYPES: (RelationType | 'all')[] = ['all', 'family', 'ally', 'enemy', 'devotee', 'guru'];
 
 const RELATION_PORTRAITS: Record<RelationType | 'all', string | null> = {
   all: null,
-  family: '/assets/character_sita.png',
-  ally: '/assets/character_sugriva.png',
-  enemy: '/assets/character_ravana.png',
-  devotee: '/assets/character_hanuman.png',
-  guru: '/assets/character_vishwamitra.png',
+  family: '/assets/character_sita.jpg',
+  ally: '/assets/character_sugriva.jpg',
+  enemy: '/assets/character_ravana.jpg',
+  devotee: '/assets/character_hanuman.jpg',
+  guru: '/assets/character_vishwamitra.jpg',
 };
 
 // Deterministic radial layout: factions get angular sectors,

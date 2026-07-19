@@ -37,7 +37,7 @@ export default function ReadingModeDrawer({ open, kandaId, onClose }: ReadingMod
           className="fixed inset-0 z-[85] overflow-y-auto"
           style={{
             backgroundColor: '#1a1410',
-            backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(217,164,65,0.10) 0%, rgba(20,16,10,0.9) 55%), url(/assets/background.png)',
+            backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(217,164,65,0.10) 0%, rgba(20,16,10,0.9) 55%), url(/assets/background.jpg)',
             backgroundSize: 'cover',
             backgroundAttachment: 'fixed',
           }}

@@ -26,6 +26,8 @@ const en = {
   // Bottom dock
   'dock.lifeline': 'Lifeline',
   'dock.cast': 'Cast',
+  'dock.reels': 'Reels',
+  'dock.chat': 'Chat',
   'dock.mandir': 'Mandir',
   'dock.saved': 'Saved',
 
@@ -152,6 +154,8 @@ const hi: Record<TKey, string> = {
 
   'dock.lifeline': 'जीवनरेखा',
   'dock.cast': 'पात्र',
+  'dock.reels': 'रील्स',
+  'dock.chat': 'संवाद',
   'dock.mandir': 'मंदिर',
   'dock.saved': 'सहेजे गए',
 

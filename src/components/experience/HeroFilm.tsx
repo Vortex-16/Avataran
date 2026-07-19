@@ -133,7 +133,7 @@ export default function HeroFilm() {
     >
       {/* Background Poster: displayed instantly */}
       <img
-        src="/assets/background.png"
+        src="/assets/background.jpg"
         alt="Hero Background Poster"
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
           video1Playable && !reducedMotion ? 'opacity-0 pointer-events-none' : 'opacity-100'

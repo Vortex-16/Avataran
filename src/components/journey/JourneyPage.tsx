@@ -38,6 +38,8 @@ const KandaQuizModal = dynamic(() => import('./interactive/KandaQuizModal'), { s
 const CharacterConstellation = dynamic(() => import('./interactive/CharacterConstellation'), { ssr: false });
 const BookmarkPanel = dynamic(() => import('./interactive/BookmarkPanel'), { ssr: false });
 const ReadingModeDrawer = dynamic(() => import('./interactive/ReadingModeDrawer'), { ssr: false });
+const ReelsFeedModal = dynamic(() => import('./interactive/ReelsFeedModal'), { ssr: false });
+const SocialChatPanel = dynamic(() => import('./interactive/SocialChatPanel'), { ssr: false });
 
 export default function JourneyPage() {
   const { theme, isLight, toggleTheme } = useTheme();
@@ -170,8 +172,8 @@ export default function JourneyPage() {
       style={{
         backgroundAttachment: 'fixed',
         backgroundImage: isLight
-          ? 'linear-gradient(to bottom, rgba(255, 250, 245, 0.35) 0%, rgba(242, 232, 220, 0.6) 100%), radial-gradient(circle at 50% 50%, rgba(194, 154, 74, 0.15) 0%, rgba(242, 232, 220, 0.6) 100%), url(/assets/background.png)'
-          : 'linear-gradient(to bottom, rgba(16, 12, 8, 0.35) 0%, rgba(10, 8, 6, 0.75) 100%), radial-gradient(circle at 50% 50%, rgba(217, 164, 65, 0.28) 0%, rgba(10, 8, 6, 0.85) 100%), url(/assets/background.png)',
+          ? 'linear-gradient(to bottom, rgba(255, 250, 245, 0.35) 0%, rgba(242, 232, 220, 0.6) 100%), radial-gradient(circle at 50% 50%, rgba(194, 154, 74, 0.15) 0%, rgba(242, 232, 220, 0.6) 100%), url(/assets/background.jpg)'
+          : 'linear-gradient(to bottom, rgba(16, 12, 8, 0.35) 0%, rgba(10, 8, 6, 0.75) 100%), radial-gradient(circle at 50% 50%, rgba(217, 164, 65, 0.28) 0%, rgba(10, 8, 6, 0.85) 100%), url(/assets/background.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundColor: isLight ? '#faf7f2' : '#0a0907',
@@ -235,11 +237,13 @@ export default function JourneyPage() {
             onOpenSearch={() => openOverlay('search')}
             onOpenDaily={() => openQuiz('daily')}
           />
-          <BottomDock
+           <BottomDock
             currentView={currentView}
             onViewChange={handleViewChange}
             onOpenCharacters={() => openOverlay('constellation')}
             onOpenSaved={() => openOverlay('bookmarks')}
+            onOpenReels={() => openOverlay('reels')}
+            onOpenChat={() => openOverlay('chat')}
             savedCount={savedCount}
             isLight={isLight}
           />
@@ -278,6 +282,12 @@ export default function JourneyPage() {
       )}
       {activeOverlay === 'reading' && (
         <ReadingModeDrawer open kandaId={readingKandaId} onClose={closeOverlay} />
+      )}
+      {activeOverlay === 'reels' && (
+        <ReelsFeedModal open isLight={isLight} onClose={closeOverlay} />
+      )}
+      {activeOverlay === 'chat' && (
+        <SocialChatPanel open isLight={isLight} onClose={closeOverlay} />
       )}
     </div>
   );

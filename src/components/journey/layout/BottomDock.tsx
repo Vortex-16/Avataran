@@ -16,6 +16,8 @@ interface BottomDockProps {
   onViewChange: (view: JourneyView) => void;
   onOpenCharacters: () => void;
   onOpenSaved: () => void;
+  onOpenReels: () => void;
+  onOpenChat: () => void;
   savedCount: number;
   isLight: boolean;
 }
@@ -23,7 +25,7 @@ interface BottomDockProps {
 const iconCls = 'h-3.5 w-3.5 shrink-0';
 
 export default function BottomDock({
-  currentView, onViewChange, onOpenCharacters, onOpenSaved, savedCount, isLight,
+  currentView, onViewChange, onOpenCharacters, onOpenSaved, onOpenReels, onOpenChat, savedCount, isLight,
 }: BottomDockProps) {
   const { t } = useT();
   const activeOverlay = useStore(s => s.activeOverlay);
@@ -33,9 +35,11 @@ export default function BottomDock({
   const isMandirActive = activeOverlay === 'none' && currentView === 'mandir';
   const isCharactersActive = activeOverlay === 'constellation';
   const isSavedActive = activeOverlay === 'bookmarks';
+  const isReelsActive = activeOverlay === 'reels';
+  const isChatActive = activeOverlay === 'chat';
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] pointer-events-auto w-[94%] max-w-md">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] pointer-events-auto w-[94%] max-w-lg">
       <div className={`relative px-3 py-2 rounded-full border backdrop-blur-xl transition-all duration-500 shadow-[0_15px_45px_rgba(0,0,0,0.5)] flex items-center justify-between gap-0.5 ${
         isLight ? 'bg-white/75 border-black/10 text-[#2b251f]' : 'bg-[#0d0c0a]/65 border-white/10 text-[#f4e8d3]'
       }`}>
@@ -52,7 +56,7 @@ export default function BottomDock({
           <svg xmlns="http://www.w3.org/2000/svg" className={iconCls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
-          <span className="whitespace-nowrap hidden sm:inline">{t('dock.lifeline')}</span>
+          <span className="whitespace-nowrap hidden sm:inline">{t('dock.lifeline') || 'Lifeline'}</span>
         </button>
 
         {/* Characters */}
@@ -68,7 +72,39 @@ export default function BottomDock({
           <svg xmlns="http://www.w3.org/2000/svg" className={iconCls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-1a4 4 0 00-4-4h-1m-6 5H2v-1a4 4 0 014-4h4a4 4 0 014 4v1zm-3-11a3 3 0 11-6 0 3 3 0 016 0zm7 0a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          <span className="whitespace-nowrap hidden sm:inline">{t('dock.cast')}</span>
+          <span className="whitespace-nowrap hidden sm:inline">{t('dock.cast') || 'Cast'}</span>
+        </button>
+
+        {/* Reels */}
+        <button
+          onClick={onOpenReels}
+          className={`relative flex-1 py-2 px-2 rounded-full font-body text-[9px] uppercase tracking-wider font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-300 ${
+            isReelsActive ? 'text-[#ff7900] z-10' : inactive
+          }`}
+        >
+          {isReelsActive && (
+            <motion.div layoutId="activeDockTab" className={`absolute inset-0 rounded-full z-[-1] border ${isLight ? 'bg-black/[0.04] border-black/10' : 'bg-white/[0.06] border-white/10'}`} transition={{ type: 'spring', stiffness: 380, damping: 30 }} transition-delay="100" />
+          )}
+          <svg xmlns="http://www.w3.org/2000/svg" className={iconCls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          <span className="whitespace-nowrap hidden sm:inline">{t('dock.reels') || 'Reels'}</span>
+        </button>
+
+        {/* Chat */}
+        <button
+          onClick={onOpenChat}
+          className={`relative flex-1 py-2 px-2 rounded-full font-body text-[9px] uppercase tracking-wider font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-300 ${
+            isChatActive ? 'text-[#ff7900] z-10' : inactive
+          }`}
+        >
+          {isChatActive && (
+            <motion.div layoutId="activeDockTab" className={`absolute inset-0 rounded-full z-[-1] border ${isLight ? 'bg-black/[0.04] border-black/10' : 'bg-white/[0.06] border-white/10'}`} transition={{ type: 'spring', stiffness: 380, damping: 30 }} />
+          )}
+          <svg xmlns="http://www.w3.org/2000/svg" className={iconCls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <span className="whitespace-nowrap hidden sm:inline">{t('dock.chat') || 'Chat'}</span>
         </button>
 
         {/* Ram Mandir */}
@@ -84,7 +120,7 @@ export default function BottomDock({
           <svg xmlns="http://www.w3.org/2000/svg" className={iconCls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
-          <span className="whitespace-nowrap hidden sm:inline">{t('dock.mandir')}</span>
+          <span className="whitespace-nowrap hidden sm:inline">{t('dock.mandir') || 'Mandir'}</span>
         </button>
 
         {/* Saved */}
@@ -107,7 +143,7 @@ export default function BottomDock({
               </span>
             )}
           </span>
-          <span className="whitespace-nowrap hidden sm:inline">{t('dock.saved')}</span>
+          <span className="whitespace-nowrap hidden sm:inline">{t('dock.saved') || 'Saved'}</span>
         </button>
       </div>
     </div>

@@ -11,8 +11,8 @@ interface Asset {
 }
 
 const CRITICAL_ASSETS: Asset[] = [
-  { url: '/assets/logo.png', type: 'image', weight: 2014989 },
-  { url: '/assets/background.png', type: 'image', weight: 1968028 },
+  { url: '/assets/logo.jpg', type: 'image', weight: 2014989 },
+  { url: '/assets/background.jpg', type: 'image', weight: 1968028 },
   { url: '/video/intro-space.mp4', type: 'video', weight: 2681875 },
   { url: '/video/intro-cinematic.mp4', type: 'video', weight: 2840286 },
   { url: '/audio/initial.mp3', type: 'audio', weight: 232313 },

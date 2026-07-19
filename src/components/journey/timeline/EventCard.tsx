@@ -25,9 +25,6 @@ interface EventCardProps {
   setIsNightMode: (night: boolean) => void;
   lallaOutfit: string;
   setLallaOutfit: (outfit: string) => void;
-  openDrawerId: string | null;
-  onOpenDrawer: (kanda: KandaSection) => void;
-  onNavigateToMandir: () => void;
 }
 
 export default function EventCard({
@@ -40,9 +37,6 @@ export default function EventCard({
   setIsNightMode,
   lallaOutfit,
   setLallaOutfit,
-  openDrawerId,
-  onOpenDrawer,
-  onNavigateToMandir,
 }: EventCardProps) {
   const { t } = useT();
   const isEven = idx % 2 === 0;
@@ -65,7 +59,7 @@ export default function EventCard({
           {/* Hero image section */}
           <div className="relative h-40 md:h-48 overflow-hidden">
             <Image
-              src={event.id === 'ram-mandir' && isNightMode ? '/assets/bg_temple_night.png' : event.media.hero}
+              src={event.id === 'ram-mandir' && isNightMode ? '/assets/bg_temple_night.jpg' : event.media.hero}
               alt={event.title}
               priority={idx === 0}
               fill

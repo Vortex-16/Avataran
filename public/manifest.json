@@ -1,0 +1,22 @@
+{
+  "name": "Avataran - Shrimad Ramayana",
+  "short_name": "Avataran",
+  "description": "An interactive digital monument of the Valmiki Ramayana, following the life and journeys of Lord Ram.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0907",
+  "theme_color": "#0a0907",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

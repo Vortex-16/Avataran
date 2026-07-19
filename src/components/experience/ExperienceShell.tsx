@@ -8,7 +8,35 @@ import AudioDirector from '@/components/experience/AudioDirector';
 import JourneyPage from '@/components/journey/JourneyPage';
 
 export default function ExperienceShell() {
-  const { isReady, heroComplete, setReducedMotion, setHeroComplete } = useStore();
+  const { isReady, heroComplete, setReducedMotion, setHeroComplete, setUser } = useStore();
+
+  // Listen to Auth State Changes
+  useEffect(() => {
+    let unsubscribe: (() => void) | undefined;
+    
+    const initAuthListener = async () => {
+      const { onAuthStateChanged } = await import('firebase/auth');
+      const { auth } = await import('@/lib/firebase');
+      
+      unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUser({
+            uid: user.uid,
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+          });
+        } else {
+          setUser(null);
+        }
+      });
+    };
+    
+    initAuthListener();
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [setUser]);
 
   // Skip intro film on return visits
   useEffect(() => {

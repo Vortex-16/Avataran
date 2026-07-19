@@ -8,7 +8,7 @@ export type QualityTier = 'high' | 'balanced' | 'lightweight';
 export type KandaId = 'bala' | 'ayodhya' | 'aranya' | 'kishkindha' | 'sundara' | 'yuddha' | 'uttara' | 'ayodhya-mandir';
 
 // ── Interactive features (Phase 1C) ─────────────────────────
-export type OverlayName = 'none' | 'search' | 'quiz' | 'constellation' | 'bookmarks' | 'reading';
+export type OverlayName = 'none' | 'search' | 'quiz' | 'constellation' | 'bookmarks' | 'reading' | 'reels' | 'chat';
 export type QuizMode = 'kanda' | 'daily' | 'grand';
 
 export interface QuizStats {
@@ -126,6 +126,20 @@ interface ExperienceState {
   lang: Lang;
   setLang: (lang: Lang) => void;
   toggleLang: () => void;
+
+  // ── Firebase Auth ──
+  user: FirebaseUser | null;
+  authLoading: boolean;
+  setUser: (user: FirebaseUser | null) => void;
+  signInWithGoogle: () => Promise<void>;
+  signOutUser: () => Promise<void>;
+}
+
+export interface FirebaseUser {
+  uid: string;
+  displayName: string | null;
+  email: string | null;
+  photoURL: string | null;
 }
 
 export const useStore = create<ExperienceState>((set) => ({
@@ -245,4 +259,27 @@ export const useStore = create<ExperienceState>((set) => ({
     if (typeof window !== 'undefined') { try { localStorage.setItem(LANG_KEY, next); } catch { /* noop */ } }
     return { lang: next };
   }),
+
+  // ── Firebase Auth ──
+  user: null,
+  authLoading: true,
+  setUser: (user) => set({ user, authLoading: false }),
+  signInWithGoogle: async () => {
+    const { signInWithPopup } = await import('firebase/auth');
+    const { auth, googleProvider } = await import('@/lib/firebase');
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.error('Firebase Google sign-in failed:', err);
+    }
+  },
+  signOutUser: async () => {
+    const { signOut } = await import('firebase/auth');
+    const { auth } = await import('@/lib/firebase');
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error('Firebase sign-out failed:', err);
+    }
+  },
 }));
