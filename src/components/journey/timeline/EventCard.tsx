@@ -5,6 +5,7 @@
 // ============================================================
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import type { KandaSection, TimelineEvent } from '@/data/types';
 import TimelineNode from './TimelineNode';
 import DeepotsavCard from '../special/DeepotsavCard';
@@ -24,6 +25,9 @@ interface EventCardProps {
   setIsNightMode: (night: boolean) => void;
   lallaOutfit: string;
   setLallaOutfit: (outfit: string) => void;
+  openDrawerId: string | null;
+  onOpenDrawer: (kanda: KandaSection) => void;
+  onNavigateToMandir: () => void;
 }
 
 export default function EventCard({
@@ -36,6 +40,9 @@ export default function EventCard({
   setIsNightMode,
   lallaOutfit,
   setLallaOutfit,
+  openDrawerId,
+  onOpenDrawer,
+  onNavigateToMandir,
 }: EventCardProps) {
   const { t } = useT();
   const isEven = idx % 2 === 0;
@@ -57,23 +64,24 @@ export default function EventCard({
         >
           {/* Hero image section */}
           <div className="relative h-40 md:h-48 overflow-hidden">
-            <img
+            <Image
               src={event.id === 'ram-mandir' && isNightMode ? '/assets/bg_temple_night.png' : event.media.hero}
               alt={event.title}
-              loading={idx === 0 ? 'eager' : 'lazy'}
-              decoding="async"
-              className="absolute inset-0 w-full h-full object-cover"
+              priority={idx === 0}
+              fill
+              sizes="(max-width: 768px) 100vw, 45vw"
+              className="object-cover"
               style={{ filter: 'brightness(0.55) saturate(1.15)' }}
             />
             {/* Parallax foreground if exists */}
             {event.media.parallaxFg && (
-              <img
+              <Image
                 src={event.media.parallaxFg}
                 alt=""
                 aria-hidden
-                loading="lazy"
-                decoding="async"
-                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                fill
+                sizes="(max-width: 768px) 100vw, 45vw"
+                className="object-cover pointer-events-none"
                 style={{ filter: 'brightness(0.65)', mixBlendMode: 'luminosity', opacity: 0.4 }}
               />
             )}

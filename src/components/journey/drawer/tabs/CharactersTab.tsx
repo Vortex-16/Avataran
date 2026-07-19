@@ -4,6 +4,7 @@
 // ============================================================
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import type { KandaSection } from '@/data/types';
 import type { DrawerStyles } from '../drawerStyles';
 
@@ -20,12 +21,12 @@ export default function CharactersTab({ kanda, styles }: CharactersTabProps) {
       {kanda.characters.map(char => (
         <div key={char.name} className={`rounded-xl overflow-hidden border ${bgCard} flex flex-col`}>
           <div className="relative h-36 overflow-hidden">
-            <img
+            <Image
               src={char.portrait}
               alt={char.name}
-              loading="lazy"
-              decoding="async"
-              className="absolute inset-0 w-full h-full object-cover object-top"
+              fill
+              sizes="(max-width: 768px) 50vw, 200px"
+              className="object-cover object-top"
               style={{ filter: 'brightness(0.6) saturate(1.1)' }}
             />
             <div className={`absolute inset-0 bg-gradient-to-t from-${isLight ? '[#faf6f0]' : '[#0d0c0a]'} via-transparent to-transparent`} />

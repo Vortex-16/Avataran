@@ -4,6 +4,7 @@
 // ============================================================
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import type { KandaSection } from '@/data/types';
 import type { DrawerStyles } from '../drawerStyles';
 
@@ -20,12 +21,12 @@ export default function LocationsTab({ kanda, styles }: LocationsTabProps) {
       {kanda.locations.map(loc => (
         <div key={loc.name} className={`rounded-xl overflow-hidden border ${bgCard}`}>
           <div className="relative h-32 overflow-hidden">
-            <img
+            <Image
               src={loc.image}
               alt={loc.name}
-              loading="lazy"
-              decoding="async"
-              className="absolute inset-0 w-full h-full object-cover"
+              fill
+              sizes="(max-width: 768px) 100vw, 400px"
+              className="object-cover"
               style={{ filter: 'brightness(0.5) saturate(1.2)' }}
             />
             <div className={`absolute inset-0 bg-gradient-to-t from-${isLight ? '[#faf6f0]' : '[#0d0c0a]'} to-transparent`} />

@@ -6,6 +6,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import type { KandaSection, GalleryItem } from '@/data/types';
 import { getDrawerStyles } from './drawerStyles';
 import GalleryLightbox from './GalleryLightbox';
@@ -108,12 +109,12 @@ export default function KandaDrawer({ kanda, onClose, theme, onOpenReading, onOp
           >
             {/* Hero Banner */}
             <div className="relative h-52 shrink-0 overflow-hidden">
-              <img
+              <Image
                 src={kanda.heroImage}
                 alt={kanda.title}
-                loading="lazy"
-                decoding="async"
-                className="absolute inset-0 w-full h-full object-cover object-center"
+                fill
+                sizes="(max-width: 768px) 100vw, 650px"
+                className="object-cover object-center"
                 style={{ filter: 'brightness(0.45) saturate(1.1)' }}
               />
               <div className={`absolute inset-0 bg-gradient-to-t from-${isLight ? '[#faf6f0]' : '[#0d0c0a]'} via-${isLight ? '[#faf6f0]' : '[#0d0c0a]'}/40 to-transparent`} />

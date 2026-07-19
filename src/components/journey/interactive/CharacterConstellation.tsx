@@ -7,6 +7,7 @@
 'use client';
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import {
   constellationNodes, relationshipEdges, nodeById,
   FACTION_META, RELATION_META,
@@ -600,7 +601,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
                           }}
                         >
                           <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 mb-2" style={{ borderColor: hex }}>
-                            <img src={n.portrait} alt={n.name} className="w-full h-full object-cover object-top" />
+                            <Image src={n.portrait} alt={n.name} fill sizes="56px" className="object-cover object-top" />
                           </div>
                           <h4 className={`font-display text-[10px] uppercase font-bold tracking-wider leading-snug ${isLight ? 'text-black' : 'text-[#f4e8d3]'}`}>{n.name}</h4>
                           <p className="font-body text-[8px] uppercase tracking-widest mt-0.5 font-medium" style={{ color: hex }}>{n.role}</p>
@@ -640,7 +641,7 @@ export default function CharacterConstellation({ open, isLight, onClose, onOpenK
                   </button>
 
                   <div className="relative h-44 shrink-0">
-                    <img src={detail.portrait} alt={detail.name} className="absolute inset-0 w-full h-full object-cover object-top" style={{ filter: 'brightness(0.7)' }} />
+                    <Image src={detail.portrait} alt={detail.name} fill sizes="280px" className="object-cover object-top" style={{ filter: 'brightness(0.7)' }} />
                     <div className={`absolute inset-0 bg-gradient-to-t ${isLight ? 'from-[#faf6f0]' : 'from-[#0a0907]'} to-transparent`} />
                     <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between gap-2">
                       <div>

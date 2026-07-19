@@ -4,6 +4,7 @@
 // ============================================================
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import type { GalleryItem } from '@/data/types';
 import type { DrawerStyles } from '../drawerStyles';
 
@@ -24,12 +25,12 @@ export default function GalleryTab({ items, styles, onSelect }: GalleryTabProps)
           onClick={() => onSelect(g)}
           className={`relative rounded-xl overflow-hidden aspect-[4/3] group cursor-pointer border ${isLight ? 'border-black/10 hover:border-black/35' : 'border-white/[0.05] hover:border-white/20'} transition-all duration-300`}
         >
-          <img
+          <Image
             src={g.image}
             alt={g.caption}
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            fill
+            sizes="(max-width: 768px) 50vw, 20vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
             style={{ filter: 'brightness(0.65) saturate(1.1)' }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />

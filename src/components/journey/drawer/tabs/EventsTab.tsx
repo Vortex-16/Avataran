@@ -4,6 +4,7 @@
 // ============================================================
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import type { KandaSection } from '@/data/types';
 import type { DrawerStyles } from '../drawerStyles';
 import { useT } from '@/hooks/useT';
@@ -23,12 +24,12 @@ export default function EventsTab({ kanda, styles }: EventsTabProps) {
         <div key={ev.id} className={`relative rounded-xl overflow-hidden border ${bgCard}`}>
           {/* Hero image strip */}
           <div className="relative h-28 overflow-hidden">
-            <img
+            <Image
               src={ev.media.hero}
               alt={ev.title}
-              loading="lazy"
-              decoding="async"
-              className="absolute inset-0 w-full h-full object-cover"
+              fill
+              sizes="(max-width: 768px) 100vw, 400px"
+              className="object-cover"
               style={{ filter: 'brightness(0.5) saturate(1.15)' }}
             />
             <div className={`absolute inset-0 bg-gradient-to-t from-${isLight ? '[#faf6f0]' : '[#0d0c0a]'} via-${isLight ? '[#faf6f0]' : '[#0d0c0a]'}/30 to-transparent`} />
