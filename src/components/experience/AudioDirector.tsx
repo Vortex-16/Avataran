@@ -19,6 +19,7 @@ export default function AudioDirector() {
     worldState,
     activeMusicTrack,
     setActiveMusicTrack,
+    activeOverlay,
     isDynamicIslandOpen,
     setIsDynamicIslandOpen
   } = useStore();
@@ -262,6 +263,26 @@ export default function AudioDirector() {
       narrationAudioRef.current?.pause();
     }
   }, [soundEnabled, worldState.location, activeMusicTrack, isAudioInitialized]);
+  
+  // 3.4. Auto-mute background music while Reels are playing
+  useEffect(() => {
+    const ctx = audioCtxRef.current;
+    const mGain = musicGainRef.current;
+    if (!ctx || !mGain || !isAudioInitialized) return;
+
+    const now = ctx.currentTime;
+    mGain.gain.cancelScheduledValues(now);
+    mGain.gain.setValueAtTime(mGain.gain.value, now);
+
+    if (activeOverlay === 'reels') {
+      // Smoothly fade out music in 0.4s
+      mGain.gain.linearRampToValueAtTime(0, now + 0.4);
+    } else {
+      // Fade back in to normal location volume in 0.8s
+      const targetVolume = worldState.location === 'ayodhya-gate' ? 0.08 : 0.25;
+      mGain.gain.linearRampToValueAtTime(targetVolume, now + 0.8);
+    }
+  }, [activeOverlay, worldState.location, isAudioInitialized]);
 
   // 3.5. React to dynamic track switcher (Dynamic Island)
   useEffect(() => {
