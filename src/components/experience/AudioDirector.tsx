@@ -3,6 +3,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useStore } from '@/app/store';
 
+const MUSIC_TRACKS = [
+  '/audio/initial.mp3',
+  '/audio/Hum Katha Sunate Ram Sakal Gun Dhaam Ki - SouthMelody.mp3',
+  '/audio/narration-ayodhya.mp3',
+];
+
 export default function AudioDirector() {
   const { 
     isReady, 
@@ -12,6 +18,7 @@ export default function AudioDirector() {
     setSoundEnabled, 
     worldState,
     activeMusicTrack,
+    setActiveMusicTrack,
     isDynamicIslandOpen,
     setIsDynamicIslandOpen
   } = useStore();
@@ -87,8 +94,18 @@ export default function AudioDirector() {
 
     // Bus 1: Music (initial.mp3)
     const musicAudio = new Audio('/audio/initial.mp3');
-    musicAudio.loop = true;
+    musicAudio.loop = false;
     musicAudio.crossOrigin = 'anonymous';
+
+    // Ended listener to automatically shift to next track
+    musicAudio.addEventListener('ended', () => {
+      const currentTrack = useStore.getState().activeMusicTrack;
+      const currentIndex = MUSIC_TRACKS.indexOf(currentTrack);
+      const nextIndex = currentIndex !== -1 ? (currentIndex + 1) % MUSIC_TRACKS.length : 0;
+      const nextTrack = MUSIC_TRACKS[nextIndex];
+      useStore.getState().setActiveMusicTrack(nextTrack);
+    });
+
     const musicSource = ctx.createMediaElementSource(musicAudio);
     const musicGain = ctx.createGain();
     musicGain.gain.setValueAtTime(0.3, ctx.currentTime); // Hero theme volume

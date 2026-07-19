@@ -32,7 +32,7 @@ export default function GarbhagrihaCard({ isLight, lallaOutfit, setLallaOutfit }
         <PixelTransition
           src={`/assets/ram_lalla_${
             lallaOutfit === 'milk' ? 'abhisheka_milk' : lallaOutfit
-          }.png`}
+          }.jpg`}
           alt={`Ram Lalla ${lallaOutfit}`}
           gridSize={12}
           pixelColor={isLight ? '#d9a441' : '#ff7900'}
