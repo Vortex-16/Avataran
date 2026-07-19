@@ -75,7 +75,7 @@ export default function ReelsFeedModal({ open, isLight, onClose }: ReelsFeedModa
         className="fixed inset-0 z-[80] bg-black/95 flex items-center justify-center select-none"
       >
         {/* Desktop Container Framing (aspect-ratio 9:16 layout for desktop, full-screen on mobile) */}
-        <div className="relative w-full h-full max-w-md md:h-[90vh] md:aspect-[9/16] md:rounded-3xl md:overflow-hidden md:border border-white/10 md:shadow-2xl bg-black">
+        <div className="relative w-full h-[100dvh] max-w-md md:h-[90vh] md:aspect-[9/16] md:rounded-3xl md:overflow-hidden md:border border-white/10 md:shadow-2xl bg-black">
           
           {/* Scroll snap container */}
           <div
@@ -294,10 +294,7 @@ function ReelCard({ item, isActive, isLight, onClose }: ReelCardProps) {
           aria-label="Share reel"
         >
           <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 10.742l-5.717 3.43m5.717-3.43L6.442 8.358m2.242 2.384L12 12m0 0l3.316-2.384m-3.316 2.384l2.242 3.43m-2.242-3.43L12 6.5" />
-            <circle cx="18" cy="5" r="3" />
-            <circle cx="6" cy="12" r="3" />
-            <circle cx="18" cy="19" r="3" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186l4.755-2.853a2.25 2.25 0 110.377 0.63l-4.756 2.853a2.25 2.25 0 11-.377.362l4.757 2.854a2.25 2.25 0 11-.377.63l-4.757-2.853a2.25 2.25 0 110-2.186z" />
           </svg>
         </button>
 

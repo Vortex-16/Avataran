@@ -237,16 +237,18 @@ export default function JourneyPage() {
             onOpenSearch={() => openOverlay('search')}
             onOpenDaily={() => openQuiz('daily')}
           />
-           <BottomDock
-            currentView={currentView}
-            onViewChange={handleViewChange}
-            onOpenCharacters={() => openOverlay('constellation')}
-            onOpenSaved={() => openOverlay('bookmarks')}
-            onOpenReels={() => openOverlay('reels')}
-            onOpenChat={() => openOverlay('chat')}
-            savedCount={savedCount}
-            isLight={isLight}
-          />
+          {activeOverlay !== 'chat' && activeOverlay !== 'reels' && (
+            <BottomDock
+              currentView={currentView}
+              onViewChange={handleViewChange}
+              onOpenCharacters={() => openOverlay('constellation')}
+              onOpenSaved={() => openOverlay('bookmarks')}
+              onOpenReels={() => openOverlay('reels')}
+              onOpenChat={() => openOverlay('chat')}
+              savedCount={savedCount}
+              isLight={isLight}
+            />
+          )}
           <KandaDrawer
             kanda={openDrawer}
             onClose={closeDrawer}

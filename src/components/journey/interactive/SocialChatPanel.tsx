@@ -72,6 +72,19 @@ export default function SocialChatPanel({ open, isLight, onClose }: SocialChatPa
     };
   }, [open]);
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-resize textarea according to text length
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    textarea.style.height = '40px';
+    const scrollHeight = textarea.scrollHeight;
+    if (scrollHeight > 40) {
+      textarea.style.height = `${Math.min(scrollHeight, 120)}px`;
+    }
+  }, [inputText]);
+
   // Auto-scroll to bottom
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -123,7 +136,7 @@ export default function SocialChatPanel({ open, isLight, onClose }: SocialChatPa
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', damping: 30, stiffness: 280 }}
-          className={`relative z-10 w-full max-w-[360px] h-full border-l flex flex-col ${
+          className={`relative z-10 w-full max-w-full md:max-w-[360px] h-[100dvh] border-l flex flex-col ${
             isLight
               ? 'bg-[#faf6f0] border-black/10 text-[#2b251f]'
               : 'bg-[#0a0907] border-white/10 text-[#f4e8d3]'
@@ -259,14 +272,21 @@ export default function SocialChatPanel({ open, isLight, onClose }: SocialChatPa
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-                <input
-                  type="text"
-                  maxLength={180}
+              <form onSubmit={handleSendMessage} className="flex items-end gap-2 w-full">
+                <textarea
+                  ref={textareaRef}
+                  rows={1}
+                  maxLength={300}
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage(e);
+                    }
+                  }}
                   placeholder="Share a thought or verse..."
-                  className={`flex-1 h-10 px-4 rounded-xl font-body text-[11px] outline-none border focus:border-[#ff7900] transition-colors ${
+                  className={`flex-1 min-h-[40px] max-h-[120px] py-2.5 px-4 rounded-xl font-body text-[11px] outline-none border focus:border-[#ff7900] transition-colors resize-none overflow-y-auto ${
                     isLight
                       ? 'bg-black/[0.03] border-black/10 text-black'
                       : 'bg-white/[0.04] border-white/10 text-white'
@@ -275,7 +295,7 @@ export default function SocialChatPanel({ open, isLight, onClose }: SocialChatPa
                 <button
                   type="submit"
                   disabled={!inputText.trim() || isSending}
-                  className="h-10 px-4 rounded-xl bg-[#ff7900] text-white hover:bg-[#e06b00] disabled:bg-[#ff7900]/40 disabled:cursor-not-allowed flex items-center justify-center transition-all cursor-pointer"
+                  className="h-10 px-4 rounded-xl bg-[#ff7900] text-white hover:bg-[#e06b00] disabled:bg-[#ff7900]/40 disabled:cursor-not-allowed flex items-center justify-center transition-all cursor-pointer shrink-0"
                 >
                   {isSending ? (
                     <div className="w-3.5 h-3.5 border-2 border-t-transparent border-white rounded-full animate-spin" />
