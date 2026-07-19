@@ -1,0 +1,14 @@
+{
+  "name": "avataran-chat-server",
+  "version": "1.0.0",
+  "description": "Scaled WebSocket Chat Server for Avataran with Redis Pub/Sub",
+  "main": "chat-server.js",
+  "scripts": {
+    "start": "node chat-server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "redis": "^4.6.13",
+    "ws": "^8.16.0"
+  }
+}
