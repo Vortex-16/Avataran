@@ -20,13 +20,10 @@ import { useProgress } from '@/hooks/useProgress';
 import { useLenis } from '@/hooks/useLenis';
 import { useKandaTracker } from '@/hooks/useKandaTracker';
 
-import ThemeToggle from './layout/ThemeToggle';
-import LanguageToggle from './layout/LanguageToggle';
 import TopToolbar from './layout/TopToolbar';
 import ScrollRing from './layout/ScrollRing';
 import LeftKandaNav from './layout/LeftKandaNav';
 import BottomDock, { JourneyView } from './layout/BottomDock';
-import ResumePrompt from './layout/ResumePrompt';
 import TimelineTrack from './timeline/TimelineTrack';
 import KandaDrawer from './drawer/KandaDrawer';
 import DynamicIslandPlayer from './DynamicIslandPlayer';
@@ -38,7 +35,6 @@ const KandaQuizModal = dynamic(() => import('./interactive/KandaQuizModal'), { s
 const CharacterConstellation = dynamic(() => import('./interactive/CharacterConstellation'), { ssr: false });
 const BookmarkPanel = dynamic(() => import('./interactive/BookmarkPanel'), { ssr: false });
 const ReadingModeDrawer = dynamic(() => import('./interactive/ReadingModeDrawer'), { ssr: false });
-const ReelsFeedModal = dynamic(() => import('./interactive/ReelsFeedModal'), { ssr: false });
 const SocialChatPanel = dynamic(() => import('./interactive/SocialChatPanelWS'), { ssr: false });
 
 export default function JourneyPage() {
@@ -229,23 +225,20 @@ export default function JourneyPage() {
       {/* Fixed UI */}
       {isReady && (
         <>
-          <ThemeToggle isLight={isLight} onToggle={toggleTheme} />
-          <LanguageToggle isLight={isLight} />
           <TopToolbar
             isLight={isLight}
             dailyStreak={dailyStreak}
+            savedCount={savedCount}
             onOpenSearch={() => openOverlay('search')}
             onOpenDaily={() => openQuiz('daily')}
+            onOpenSaved={() => openOverlay('bookmarks')}
+            onToggleTheme={toggleTheme}
           />
-          {activeOverlay !== 'chat' && activeOverlay !== 'reels' && (
+          {activeOverlay !== 'chat' && (
             <BottomDock
               currentView={currentView}
               onViewChange={handleViewChange}
               onOpenCharacters={() => openOverlay('constellation')}
-              onOpenSaved={() => openOverlay('bookmarks')}
-              onOpenReels={() => openOverlay('reels')}
-              onOpenChat={() => openOverlay('chat')}
-              savedCount={savedCount}
               isLight={isLight}
             />
           )}
@@ -258,13 +251,6 @@ export default function JourneyPage() {
           />
           <DynamicIslandPlayer />
           <SlokaOfTheDay isLight={isLight} onOpenKanda={navigateToKanda} />
-          <ResumePrompt
-            show={showResumePrompt}
-            savedProgress={savedProgress}
-            isLight={isLight}
-            onStartFresh={clearProgress}
-            onResume={handleResume}
-          />
           {isMobile && <ScrollRing isLight={isLight} progress={scrollProgress} />}
         </>
       )}
@@ -284,9 +270,6 @@ export default function JourneyPage() {
       )}
       {activeOverlay === 'reading' && (
         <ReadingModeDrawer open kandaId={readingKandaId} onClose={closeOverlay} />
-      )}
-      {activeOverlay === 'reels' && (
-        <ReelsFeedModal open isLight={isLight} onClose={closeOverlay} />
       )}
       {activeOverlay === 'chat' && (
         <SocialChatPanel open isLight={isLight} onClose={closeOverlay} />

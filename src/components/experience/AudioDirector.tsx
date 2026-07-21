@@ -459,47 +459,6 @@ export default function AudioDirector() {
         </div>
       )}
 
-      {/* Persistent Audio Controller Button (placed top-left, visible after loading is complete) */}
-      {soundConsentGiven && isReady && (
-        <button
-          onClick={() => {
-            const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
-            
-            if (isMobile && useStore.getState().heroComplete) {
-              setIsDynamicIslandOpen(!isDynamicIslandOpen);
-            } else {
-              const nextSoundState = !soundEnabled;
-              setSoundEnabled(nextSoundState);
-              sessionStorage.setItem('avataran_sound_enabled', nextSoundState.toString());
-              
-              if (!audioCtxRef.current) {
-                try {
-                  initAudio();
-                } catch (err) {
-                  console.warn('Web Audio initialization failed on toggle:', err);
-                }
-              } else if (audioCtxRef.current.state === 'suspended') {
-                audioCtxRef.current.resume();
-              }
-            }
-          }}
-          className="fixed top-8 left-[24px] z-40 bg-[#14110b]/50 backdrop-blur-md border border-[#d9a441]/20 hover:border-[#d9a441]/50 text-[#f4e8d3]/80 hover:text-[#f4e8d3] p-3 rounded-full transition-all duration-300 shadow-md group focus:outline-none focus:ring-1 focus:ring-[#d9a441]"
-          aria-label={soundEnabled ? 'Mute experience' : 'Unmute experience'}
-        >
-          {soundEnabled ? (
-            /* Unmuted (Speaker Icon) */
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-            </svg>
-          ) : (
-            /* Muted (Mute Speaker Icon) */
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-            </svg>
-          )}
-        </button>
-      )}
     </>
   );
 }

@@ -72,40 +72,40 @@ export default function SlokaOfTheDay({ isLight, onOpenKanda }: SlokaOfTheDayPro
             transition={{ type: 'spring', damping: 26, stiffness: 300 }}
             className={`rounded-2xl border backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden ${panelBg}`}
           >
-            <div className="flex items-center justify-between px-4 py-2.5 border-b" style={{ borderColor: isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)' }}>
-              <span className="font-body text-[9px] uppercase tracking-[0.25em] font-bold text-[#ff7900]">
+            <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)' }}>
+              <span className="font-body text-xs uppercase tracking-[0.2em] font-bold text-[#ff7900]">
                 ✦ {t('sloka.title')}
               </span>
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Collapse"
-                className={`w-6 h-6 rounded-full flex items-center justify-center cursor-pointer transition-colors ${isLight ? 'text-black/40 hover:text-black/80' : 'text-[#f4e8d3]/40 hover:text-[#f4e8d3]'}`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors ${isLight ? 'text-black/60 hover:text-black hover:bg-black/5' : 'text-[#f4e8d3]/60 hover:text-[#f4e8d3] hover:bg-white/5'}`}
               >
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
               </button>
             </div>
 
             <div className="p-4 flex flex-col gap-3">
-              <p className={`font-devanagari text-base leading-relaxed italic ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]/90'}`}>
+              <p className={`font-devanagari text-base md:text-lg leading-relaxed italic ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'}`}>
                 {verse.devanagari}
               </p>
-              <p className={`font-body text-[11px] leading-relaxed ${isLight ? 'text-[#3a3229]/80' : 'text-[#f4e8d3]/65'}`}>
+              <p className={`font-body text-xs md:text-sm leading-relaxed ${isLight ? 'text-[#2b251f]' : 'text-[#f4e8d3]/90'} font-medium`}>
                 {verse.translation}
               </p>
-              <div className="flex items-center justify-between pt-1">
-                <span className={`font-body text-[9px] uppercase tracking-wider ${isLight ? 'text-black/40' : 'text-[#f4e8d3]/40'}`}>
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/5">
+                <span className={`font-body text-[10px] md:text-xs uppercase tracking-wider font-semibold ${isLight ? 'text-black/60' : 'text-[#f4e8d3]/70'}`}>
                   {verse.speaker ?? 'Valmiki'} · {kandaId} {verse.sarga}.{verse.shloka}
                 </span>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-2">
                   <button
                     onClick={share}
-                    className={`px-2.5 py-1 rounded-full font-body text-[9px] uppercase tracking-wider font-semibold border transition-all cursor-pointer ${isLight ? 'border-black/10 text-black/60 hover:text-black' : 'border-white/10 text-[#f4e8d3]/60 hover:text-[#f4e8d3]'}`}
+                    className={`px-3 py-1.5 rounded-full font-body text-xs uppercase tracking-wider font-bold border transition-all cursor-pointer min-h-[36px] ${isLight ? 'border-black/20 text-black/80 hover:text-black hover:bg-black/5' : 'border-white/20 text-[#f4e8d3] hover:border-white/40'}`}
                   >
                     {copied ? t('action.copied') : t('action.share')}
                   </button>
                   <button
                     onClick={() => onOpenKanda(kandaId)}
-                    className="px-2.5 py-1 rounded-full font-body text-[9px] uppercase tracking-wider font-bold text-white border-0 cursor-pointer bg-gradient-to-r from-[#ff5e00] to-[#ff7900] hover:shadow-[0_0_14px_rgba(255,94,0,0.4)] transition-all"
+                    className="px-3.5 py-1.5 rounded-full font-body text-xs uppercase tracking-wider font-bold text-white border-0 cursor-pointer bg-gradient-to-r from-[#ff5e00] to-[#ff7900] hover:shadow-[0_0_16px_rgba(255,94,0,0.5)] transition-all min-h-[36px]"
                   >
                     {t('action.read')}
                   </button>
@@ -120,10 +120,10 @@ export default function SlokaOfTheDay({ isLight, onOpenKanda }: SlokaOfTheDayPro
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             onClick={() => setOpen(true)}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-full border backdrop-blur-xl shadow-lg cursor-pointer ${panelBg}`}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-full border backdrop-blur-xl shadow-lg cursor-pointer min-h-[44px] ${panelBg}`}
           >
-            <span className="text-[#ff7900] text-sm">✦</span>
-            <span className={`font-body text-[9px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-black/70' : 'text-[#f4e8d3]/70'}`}>{t('sloka.title')}</span>
+            <span className="text-[#ff7900] text-base">✦</span>
+            <span className={`font-body text-xs uppercase tracking-[0.15em] font-bold ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'}`}>{t('sloka.title')}</span>
           </motion.button>
         )}
       </AnimatePresence>

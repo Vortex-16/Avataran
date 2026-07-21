@@ -123,10 +123,11 @@ export default function KandaDrawer({ kanda, onClose, theme, onOpenReading, onOp
               {/* Close button */}
               <button
                 onClick={onClose}
-                className={`absolute top-4 right-4 z-10 w-9 h-9 rounded-full ${isLight ? 'bg-white/85 border-black/15 text-black/70 hover:text-black hover:border-black/35' : 'bg-black/50 border-white/10 text-[#f4e8d3]/70 hover:text-[#f4e8d3] hover:border-white/30'} flex items-center justify-center transition-all duration-200 cursor-pointer`}
+                className={`absolute top-4 right-4 z-10 w-11 h-11 rounded-full ${isLight ? 'bg-white/95 border-black/20 text-black hover:bg-white' : 'bg-black/70 border-white/20 text-[#f4e8d3] hover:border-white/40'} flex items-center justify-center transition-all duration-200 cursor-pointer shadow-md`}
                 aria-label="Close drawer"
+                title="Close / बंद करें"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -134,15 +135,15 @@ export default function KandaDrawer({ kanda, onClose, theme, onOpenReading, onOp
               {/* Kanda metadata */}
               <div className="absolute bottom-5 left-6 right-6">
                 <span
-                  className="font-body text-[9px] uppercase tracking-[0.3em] font-bold"
+                  className="font-body text-xs md:text-sm uppercase tracking-[0.25em] font-bold"
                   style={{ color: kanda.accentHex }}
                 >
                   {kanda.title}
                 </span>
-                <h2 className={`font-display text-2xl ${textTitle} tracking-wide uppercase mt-1 drop-shadow-lg`}>
+                <h2 className={`font-display text-2xl md:text-3xl ${textTitle} tracking-wide uppercase mt-1 drop-shadow-lg font-bold`}>
                   {kanda.subtitle}
                 </h2>
-                <p className={`font-body text-[11px] ${isLight ? 'text-[#3a3229]/80' : 'text-[#f4e8d3]/55'} mt-2 leading-relaxed line-clamp-2`}>
+                <p className={`font-body text-xs md:text-sm ${isLight ? 'text-[#2b251f]' : 'text-[#f4e8d3]/90'} mt-2 leading-relaxed line-clamp-2 font-normal`}>
                   {kanda.description}
                 </p>
               </div>
@@ -150,24 +151,24 @@ export default function KandaDrawer({ kanda, onClose, theme, onOpenReading, onOp
 
             {/* Sloka Banner */}
             <div
-              className={`shrink-0 px-6 py-3 border-y ${borderDivider} flex items-center gap-4`}
-              style={{ background: `linear-gradient(90deg, ${kanda.accentHex}08, transparent)` }}
+              className={`shrink-0 px-6 py-3.5 border-y ${borderDivider} flex items-center gap-4`}
+              style={{ background: `linear-gradient(90deg, ${kanda.accentHex}15, transparent)` }}
             >
               <div className="min-w-0 flex-1">
-                <p className="font-devanagari text-sm italic truncate" style={{ color: kanda.accentHex }}>
+                <p className="font-devanagari text-base italic truncate font-semibold" style={{ color: kanda.accentHex }}>
                   {kanda.sloka}
                 </p>
-                <p className={`font-body text-[10px] ${isLight ? 'text-[#3a3229]/65' : 'text-[#f4e8d3]/45'} italic mt-0.5 line-clamp-1`}>
+                <p className={`font-body text-xs ${isLight ? 'text-[#2b251f]' : 'text-[#f4e8d3]/85'} italic mt-0.5 line-clamp-1`}>
                   {kanda.slokaTranslation}
                 </p>
               </div>
               {onOpenQuiz && (kanda.quizQuestions?.length ?? 0) > 0 && (
                 <button
                   onClick={() => onOpenQuiz(kanda.id)}
-                  className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full font-body text-[9px] uppercase tracking-wider font-bold border transition-all cursor-pointer"
-                  style={{ borderColor: `${kanda.accentHex}55`, color: kanda.accentHex, background: `${kanda.accentHex}12` }}
+                  className="shrink-0 flex items-center gap-2 px-4 py-2 rounded-full font-body text-xs uppercase tracking-wider font-bold border transition-all cursor-pointer min-h-[40px]"
+                  style={{ borderColor: `${kanda.accentHex}75`, color: kanda.accentHex, background: `${kanda.accentHex}20` }}
                 >
-                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   {t('drawer.quiz')}
@@ -176,7 +177,7 @@ export default function KandaDrawer({ kanda, onClose, theme, onOpenReading, onOp
             </div>
 
             {/* Tab Bar */}
-            <div className={`shrink-0 flex items-center gap-0 overflow-x-auto border-b ${isLight ? 'border-black/[0.08]' : 'border-white/[0.05]'} px-4 scrollbar-none`}>
+            <div className={`shrink-0 flex items-center gap-0 overflow-x-auto border-b ${isLight ? 'border-black/15' : 'border-white/10'} px-4 scrollbar-none`}>
               {tabs.map(tb => {
                 // Hide weapons tab if empty
                 if (tb.id === 'weapons' && kanda.weapons.length === 0) return null;
@@ -186,10 +187,10 @@ export default function KandaDrawer({ kanda, onClose, theme, onOpenReading, onOp
                   <button
                     key={tb.id}
                     onClick={() => setTab(tb.id)}
-                    className={`shrink-0 px-4 py-3 font-body text-[10px] uppercase tracking-[0.2em] font-semibold transition-all duration-200 border-b-2 cursor-pointer ${
+                    className={`shrink-0 px-4 py-3.5 font-body text-xs md:text-sm uppercase tracking-wider font-bold transition-all duration-200 border-b-2 cursor-pointer min-h-[46px] ${
                       tab === tb.id
                         ? 'border-current text-[#d9a441]'
-                        : isLight ? 'border-transparent text-black/35 hover:text-black/70' : 'border-transparent text-[#f4e8d3]/35 hover:text-[#f4e8d3]/70'
+                        : isLight ? 'border-transparent text-black/55 hover:text-black' : 'border-transparent text-[#f4e8d3]/60 hover:text-[#f4e8d3]'
                     }`}
                     style={tab === tb.id ? { borderColor: kanda.accentHex, color: kanda.accentHex } : {}}
                   >

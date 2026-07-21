@@ -84,12 +84,12 @@ export default function EventCard({
             {/* Turning point badge */}
             {event.turning && (
               <div
-                className="absolute top-3 left-3 font-body text-[8px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full border font-bold"
+                className="absolute top-3 left-3 font-body text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full border font-bold"
                 style={{
                   borderColor: kanda.accentHex,
                   color: kanda.accentHex,
-                  background: `${kanda.accentHex}18`,
-                  boxShadow: `0 0 12px ${kanda.accentHex}30`,
+                  background: `${kanda.accentHex}25`,
+                  boxShadow: `0 0 14px ${kanda.accentHex}40`,
                 }}
               >
                 ◈ {t('timeline.turningPoint')}
@@ -97,63 +97,63 @@ export default function EventCard({
             )}
 
             <div className="absolute bottom-3 left-4 right-4">
-              <span className={`font-body text-[9px] uppercase tracking-widest ${isLight ? 'text-white/80' : 'text-[#f4e8d3]/50'}`}>
+              <span className={`font-body text-xs md:text-sm uppercase tracking-widest font-semibold ${isLight ? 'text-white/95 drop-shadow' : 'text-[#f4e8d3] drop-shadow'}`}>
                 {event.location}
               </span>
             </div>
           </div>
 
           {/* Text content */}
-          <div className="p-5 md:p-6 flex flex-col gap-3">
+          <div className="p-5 md:p-6 flex flex-col gap-3.5">
             {/* Deepotsav animated diyas */}
             {event.id === 'new-ayodhya' && <DeepotsavCard />}
 
             {/* Header row */}
             <div className="flex justify-between items-start gap-2">
               <div>
-                <h4 className={`font-display text-lg md:text-xl ${isLight ? 'text-[#2b251f]' : 'text-[#f4e8d3]'} tracking-wide uppercase leading-tight`}>
+                <h4 className={`font-display text-xl md:text-2xl ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'} tracking-wide uppercase leading-tight font-bold`}>
                   {event.title}
                 </h4>
                 {event.subtitle && (
                   <p
-                    className="font-body text-[10px] uppercase tracking-[0.2em] mt-1 font-semibold"
+                    className="font-body text-xs uppercase tracking-[0.15em] mt-1 font-bold"
                     style={{ color: kanda.accentHex }}
                   >
                     {event.subtitle}
                   </p>
                 )}
               </div>
-              <span className={`shrink-0 font-display ${isLight ? 'text-[#2b251f]/15' : 'text-[#f4e8d3]/15'} text-2xl leading-none`}>
+              <span className={`shrink-0 font-display ${isLight ? 'text-[#2b251f]/25' : 'text-[#f4e8d3]/25'} text-2xl font-bold leading-none`}>
                 {String(idx + 1).padStart(2, '0')}
               </span>
               <div className="shrink-0">
                 <BookmarkButton
                   entry={{ type: 'event', kandaId: kanda.id, refId: event.id }}
                   isLight={isLight}
-                  sizeClass="h-3.5 w-3.5"
+                  sizeClass="h-5 w-5"
                 />
               </div>
             </div>
 
             {/* Description */}
-            <p className={`font-body text-xs ${isLight ? 'text-[#3a3229]/80' : 'text-[#f4e8d3]/70'} leading-relaxed`}>
+            <p className={`font-body text-sm md:text-base ${isLight ? 'text-[#2b251f]' : 'text-[#f4e8d3]/95'} leading-relaxed font-normal`}>
               {event.description}
             </p>
 
             {/* Weapon tag */}
             {event.weapon && (
               <div className="flex items-center gap-2">
-                <svg className="w-3 h-3 shrink-0" style={{ color: kanda.accentHex }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <svg className="w-4 h-4 shrink-0" style={{ color: kanda.accentHex }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
-                <span className={`font-body text-[9px] ${isLight ? 'text-[#3a3229]/50' : 'text-[#f4e8d3]/40'} uppercase tracking-wider`}>{event.weapon}</span>
+                <span className={`font-body text-xs ${isLight ? 'text-[#3a3229]' : 'text-[#f4e8d3]/80'} uppercase tracking-wider font-semibold`}>{event.weapon}</span>
               </div>
             )}
 
             {/* Quote */}
             {event.quote && (
               <blockquote
-                className={`border-l-2 pl-4 py-1 my-1 italic font-body text-[11px] ${isLight ? 'text-[#3a3229]/75' : 'text-[#f4e8d3]/55'} leading-relaxed`}
+                className={`border-l-3 pl-4 py-1.5 my-1 italic font-body text-xs md:text-sm ${isLight ? 'text-[#2b251f]' : 'text-[#f4e8d3]/90'} leading-relaxed font-medium`}
                 style={{ borderColor: kanda.accentHex }}
               >
                 &quot;{event.quote}&quot;
@@ -161,18 +161,18 @@ export default function EventCard({
             )}
 
             {/* Character tags */}
-            <div className={`flex flex-wrap gap-1.5 pt-3 border-t ${isLight ? 'border-black/10' : 'border-white/[0.05]'}`}>
+            <div className={`flex flex-wrap gap-2 pt-3 border-t ${isLight ? 'border-black/15' : 'border-white/10'}`}>
               {event.characters.slice(0, 6).map((char) => (
                 <span
                   key={char}
-                  className={`font-body text-[8px] uppercase tracking-wider px-2 py-0.5 rounded-full border ${isLight ? 'text-[#3a3229]/65' : 'text-[#f4e8d3]/50'}`}
-                  style={{ borderColor: isLight ? 'rgba(0,0,0,0.1)' : `${kanda.accentHex}30`, background: isLight ? 'rgba(0,0,0,0.02)' : `${kanda.accentHex}08` }}
+                  className={`font-body text-[10px] md:text-xs uppercase tracking-wider px-2.5 py-1 rounded-full border font-bold ${isLight ? 'text-[#2b251f]' : 'text-[#f4e8d3]'}`}
+                  style={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : `${kanda.accentHex}50`, background: isLight ? 'rgba(0,0,0,0.04)' : `${kanda.accentHex}15` }}
                 >
                   {char}
                 </span>
               ))}
               {event.characters.length > 6 && (
-                <span className={`font-body text-[8px] ${isLight ? 'text-[#3a3229]/45' : 'text-[#f4e8d3]/30'} px-2 py-0.5`}>
+                <span className={`font-body text-[10px] md:text-xs font-semibold ${isLight ? 'text-[#3a3229]' : 'text-[#f4e8d3]/60'} px-2 py-1`}>
                   +{event.characters.length - 6}
                 </span>
               )}

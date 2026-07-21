@@ -28,19 +28,8 @@ export function useProgress(): UseProgressReturn {
   const [showResumePrompt, setShowResumePrompt] = useState(false);
 
   useEffect(() => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    try {
-      const parsed: JourneyProgress = JSON.parse(raw);
-      const ageMs = Date.now() - parsed.savedAt;
-      // Only show resume prompt if saved within 7 days
-      if (ageMs < 7 * 24 * 60 * 60 * 1000) {
-        setSavedProgress(parsed);
-        setShowResumePrompt(true);
-      }
-    } catch {
-      localStorage.removeItem(STORAGE_KEY);
-    }
+    // Disabled resume modal popup to provide a clean, un-interrupted UX
+    setShowResumePrompt(false);
   }, []);
 
   const saveProgress = useCallback((progress: Omit<JourneyProgress, 'savedAt'>) => {

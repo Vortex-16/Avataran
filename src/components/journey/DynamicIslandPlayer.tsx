@@ -184,11 +184,11 @@ export default function DynamicIslandPlayer() {
             </div>
             
             {/* Text Details */}
-            <div className="text-left max-w-[150px]">
-              <h4 className="font-display text-[11px] uppercase tracking-wider text-[#f4e8d3] font-bold truncate">
+            <div className="text-left max-w-[160px]">
+              <h4 className="font-display text-xs uppercase tracking-wider text-[#f4e8d3] font-bold truncate">
                 {activeTrack.title}
               </h4>
-              <p className="font-body text-[8px] text-[#f4e8d3]/60 truncate">
+              <p className="font-body text-[11px] text-[#f4e8d3]/90 truncate font-medium">
                 {activeTrack.subtitle}
               </p>
             </div>
@@ -210,7 +210,7 @@ export default function DynamicIslandPlayer() {
               ))
             ) : (
               [4, 4, 4, 4, 4, 4].map((h, i) => (
-                <span key={i} className="w-[2px] h-[3px] bg-white/30 rounded-full" />
+                <span key={i} className="w-[2px] h-[3px] bg-white/40 rounded-full" />
               ))
             )}
           </div>
@@ -220,21 +220,21 @@ export default function DynamicIslandPlayer() {
         <div className="mt-4.5 flex flex-col gap-1 px-1">
           <div 
             onClick={handleProgressClick}
-            className="relative w-full h-2 flex items-center bg-white/20 rounded-full cursor-pointer group"
+            className="relative w-full h-2 flex items-center bg-white/30 rounded-full cursor-pointer group"
           >
             <div className="w-full h-[3px] bg-transparent rounded-full overflow-hidden relative">
               <div 
-                className="absolute left-0 top-0 h-full bg-[#f4e8d3]/90 rounded-full"
+                className="absolute left-0 top-0 h-full bg-[#f4e8d3] rounded-full"
                 style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
               />
             </div>
             {/* Hover scrub knob */}
             <div 
-              className="absolute w-2 h-2 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none"
-              style={{ left: `calc(${duration ? (currentTime / duration) * 100 : 0}% - 4px)` }}
+              className="absolute w-2.5 h-2.5 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none shadow"
+              style={{ left: `calc(${duration ? (currentTime / duration) * 100 : 0}% - 5px)` }}
             />
           </div>
-          <div className="flex justify-between text-[7.5px] font-body text-white/50 px-0.5">
+          <div className="flex justify-between text-xs font-body text-white/90 font-semibold px-0.5">
             <span>{formatTime(currentTime)}</span>
             <span>{formatTime(duration || 0)}</span>
           </div>

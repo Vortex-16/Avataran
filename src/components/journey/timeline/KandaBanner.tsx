@@ -28,37 +28,37 @@ export default function KandaBanner({ kanda, isLight, isOpen, onClick }: KandaBa
         style={{ borderColor: isOpen ? `${kanda.accentHex}40` : undefined }}
       >
         <span
-          className="font-body text-[10px] uppercase tracking-[0.3em] font-bold"
+          className="font-body text-xs md:text-sm uppercase tracking-[0.25em] font-bold"
           style={{ color: kanda.accentHex }}
         >
           {kanda.title}
         </span>
-        <h3 className={`font-display text-2xl md:text-3xl ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'} tracking-wider uppercase`}>
+        <h3 className={`font-display text-2xl md:text-4xl ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'} tracking-wider uppercase font-bold`}>
           {kanda.subtitle}
         </h3>
 
         {/* Sloka */}
-        <div className={`border-l border-r ${isLight ? 'border-black/10' : 'border-[#ff7900]/20'} px-6 py-2 my-1 flex flex-col gap-2 ${isLight ? 'bg-black/[0.01]' : 'bg-[#ff5e00]/[0.02]'} rounded w-full text-center`}>
-          <p className="font-devanagari text-base italic text-[#ff9933]/90 font-medium leading-relaxed">
-            {kanda.sloka.substring(0, 60)}…
+        <div className={`border-l-2 border-r-2 ${isLight ? 'border-black/15 bg-black/[0.03]' : 'border-[#ff7900]/40 bg-[#ff5e00]/[0.05]'} px-6 py-3 my-1.5 flex flex-col gap-2 rounded-lg w-full text-center`}>
+          <p className="font-devanagari text-lg md:text-xl italic text-[#ff9933] font-semibold leading-relaxed">
+            {kanda.sloka.substring(0, 70)}…
           </p>
-          <p className={`font-body text-[10px] ${isLight ? 'text-[#3a3229]/65' : 'text-[#f4e8d3]/50'} italic leading-snug`}>
+          <p className={`font-body text-xs md:text-sm ${isLight ? 'text-[#2b251f]' : 'text-[#f4e8d3]/90'} italic leading-snug font-medium`}>
             {kanda.slokaTranslation}
           </p>
         </div>
 
-        {/* Explore prompt */}
+        {/* Explore prompt button */}
         <div
-          className="flex items-center gap-2 font-body text-[9px] uppercase tracking-widest font-bold px-4 py-1.5 rounded-full border transition-all duration-300 group-hover:scale-105"
+          className="flex items-center gap-2 font-body text-xs md:text-sm uppercase tracking-wider font-bold px-6 py-2.5 rounded-full border transition-all duration-300 group-hover:scale-105 min-h-[44px]"
           style={{
-            borderColor: `${kanda.accentHex}40`,
+            borderColor: `${kanda.accentHex}60`,
             color: kanda.accentHex,
-            background: isLight ? `${kanda.accentHex}0f` : `${kanda.accentHex}1a`,
-            boxShadow: `0 4px 12px ${kanda.accentHex}08`
+            background: isLight ? `${kanda.accentHex}1a` : `${kanda.accentHex}25`,
+            boxShadow: `0 4px 14px ${kanda.accentHex}20`
           }}
         >
           <span>{t('timeline.explore')}</span>
-          <svg className="w-3 h-3 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </div>
