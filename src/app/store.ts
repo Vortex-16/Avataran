@@ -8,7 +8,7 @@ export type QualityTier = 'high' | 'balanced' | 'lightweight';
 export type KandaId = 'bala' | 'ayodhya' | 'aranya' | 'kishkindha' | 'sundara' | 'yuddha' | 'uttara' | 'ayodhya-mandir';
 
 // ── Interactive features (Phase 1C) ─────────────────────────
-export type OverlayName = 'none' | 'search' | 'quiz' | 'constellation' | 'bookmarks' | 'reading' | 'reels' | 'chat';
+export type OverlayName = 'none' | 'search' | 'quiz' | 'constellation' | 'bookmarks' | 'reading' | 'reels' | 'chat' | 'about';
 export type QuizMode = 'kanda' | 'daily' | 'grand';
 
 export interface QuizStats {

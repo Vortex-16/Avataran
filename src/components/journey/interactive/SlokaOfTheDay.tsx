@@ -73,9 +73,12 @@ export default function SlokaOfTheDay({ isLight, onOpenKanda }: SlokaOfTheDayPro
             className={`rounded-2xl border backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden ${panelBg}`}
           >
             <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)' }}>
-              <span className="font-body text-xs uppercase tracking-[0.2em] font-bold text-[#ff7900]">
-                ✦ {t('sloka.title')}
-              </span>
+              <div className="flex items-center gap-2 font-body text-xs uppercase tracking-[0.2em] font-bold text-[#ff7900]">
+                <svg className="w-4 h-4 text-[#ff7900]" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6.4-4.8-6.4 4.8 2.4-7.2-6-4.8h7.6z" />
+                </svg>
+                <span>{t('sloka.title')}</span>
+              </div>
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Collapse"
@@ -120,9 +123,12 @@ export default function SlokaOfTheDay({ isLight, onOpenKanda }: SlokaOfTheDayPro
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             onClick={() => setOpen(true)}
+            data-lenis-prevent
             className={`flex items-center gap-2 px-4 py-2.5 rounded-full border backdrop-blur-xl shadow-lg cursor-pointer min-h-[44px] ${panelBg}`}
           >
-            <span className="text-[#ff7900] text-base">✦</span>
+            <svg className="w-4 h-4 text-[#ff7900]" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6.4-4.8-6.4 4.8 2.4-7.2-6-4.8h7.6z" />
+            </svg>
             <span className={`font-body text-xs uppercase tracking-[0.15em] font-bold ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'}`}>{t('sloka.title')}</span>
           </motion.button>
         )}

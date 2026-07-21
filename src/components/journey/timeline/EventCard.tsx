@@ -20,6 +20,7 @@ interface EventCardProps {
   idx: number;
   isLight: boolean;
   isMobile: boolean;
+  onOpenDrawer?: (kanda: KandaSection) => void;
   // Special-case state (ram-mandir / garbhagriha)
   isNightMode: boolean;
   setIsNightMode: (night: boolean) => void;
@@ -33,6 +34,7 @@ export default function EventCard({
   idx,
   isLight,
   isMobile,
+  onOpenDrawer,
   isNightMode,
   setIsNightMode,
   lallaOutfit,
@@ -54,6 +56,7 @@ export default function EventCard({
       <div className={`w-full ${isMobile ? 'md:w-full pl-0' : 'md:w-[45%] pl-10 md:pl-0'}`}>
         <div
           data-accent={kanda.accentHex}
+          data-lenis-prevent
           className="timeline-event-card premium-modern-card flex flex-col gap-0 pointer-events-auto select-text overflow-hidden"
         >
           {/* Hero image section */}
@@ -160,21 +163,40 @@ export default function EventCard({
               </blockquote>
             )}
 
-            {/* Character tags */}
-            <div className={`flex flex-wrap gap-2 pt-3 border-t ${isLight ? 'border-black/15' : 'border-white/10'}`}>
-              {event.characters.slice(0, 6).map((char) => (
-                <span
-                  key={char}
-                  className={`font-body text-[10px] md:text-xs uppercase tracking-wider px-2.5 py-1 rounded-full border font-bold ${isLight ? 'text-[#2b251f]' : 'text-[#f4e8d3]'}`}
-                  style={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : `${kanda.accentHex}50`, background: isLight ? 'rgba(0,0,0,0.04)' : `${kanda.accentHex}15` }}
+            {/* Character tags & CTA row */}
+            <div className={`flex flex-wrap items-center justify-between gap-2 pt-3 border-t ${isLight ? 'border-black/15' : 'border-white/10'}`}>
+              <div className="flex flex-wrap gap-2">
+                {event.characters.slice(0, 5).map((char) => (
+                  <span
+                    key={char}
+                    className={`font-body text-[10px] md:text-xs uppercase tracking-wider px-2.5 py-1 rounded-full border font-bold ${isLight ? 'text-[#2b251f]' : 'text-[#f4e8d3]'}`}
+                    style={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : `${kanda.accentHex}50`, background: isLight ? 'rgba(0,0,0,0.04)' : `${kanda.accentHex}15` }}
+                  >
+                    {char}
+                  </span>
+                ))}
+                {event.characters.length > 5 && (
+                  <span className={`font-body text-[10px] md:text-xs font-semibold ${isLight ? 'text-[#3a3229]' : 'text-[#f4e8d3]/60'} px-2 py-1`}>
+                    +{event.characters.length - 5}
+                  </span>
+                )}
+              </div>
+
+              {onOpenDrawer && (
+                <button
+                  onClick={() => onOpenDrawer(kanda)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-body text-[11px] uppercase tracking-wider font-bold border transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                  style={{
+                    borderColor: `${kanda.accentHex}60`,
+                    color: kanda.accentHex,
+                    background: isLight ? `${kanda.accentHex}12` : `${kanda.accentHex}20`,
+                  }}
                 >
-                  {char}
-                </span>
-              ))}
-              {event.characters.length > 6 && (
-                <span className={`font-body text-[10px] md:text-xs font-semibold ${isLight ? 'text-[#3a3229]' : 'text-[#f4e8d3]/60'} px-2 py-1`}>
-                  +{event.characters.length - 6}
-                </span>
+                  <span>Explore • अध्याय</span>
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
               )}
             </div>
 

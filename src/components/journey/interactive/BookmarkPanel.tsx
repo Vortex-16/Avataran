@@ -79,7 +79,9 @@ export default function BookmarkPanel({ open, isLight, onClose, onOpenKanda }: B
             {/* Header */}
             <div className="shrink-0 flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.07)' }}>
               <div className="flex items-center gap-2">
-                <span className="text-[#ff7900]">♥</span>
+                <svg className="w-4 h-4 text-[#ff7900]" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z" />
+                </svg>
                 <span className={`font-display text-sm uppercase tracking-wider ${isLight ? 'text-[#1c1814]' : 'text-[#f4e8d3]'}`}>{t('saved.title')} ({bookmarks.length})</span>
               </div>
               <div className="flex items-center gap-2">

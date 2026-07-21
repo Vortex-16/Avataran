@@ -5,7 +5,7 @@ import { useStore } from '@/app/store';
 
 const MUSIC_TRACKS = [
   '/audio/initial.mp3',
-  '/audio/Hum Katha Sunate Ram Sakal Gun Dhaam Ki - SouthMelody.mp3',
+  '/audio/hum-katha-ram.mp3',
   '/audio/narration-ayodhya.mp3',
 ];
 

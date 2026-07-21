@@ -28,7 +28,13 @@ export function useLenis(
       lenis = new Lenis({
         lerp: 0.07,
         smoothWheel: true,
-        touchMultiplier: 2,
+        touchMultiplier: 1.5,
+        prevent: (node: HTMLElement) => {
+          return (
+            node.hasAttribute('data-lenis-prevent') ||
+            Boolean(node.closest?.('[data-lenis-prevent]'))
+          );
+        },
       }) as unknown as LenisInstance;
 
       lenisRef.current = lenis;

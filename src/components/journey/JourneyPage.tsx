@@ -28,14 +28,16 @@ import TimelineTrack from './timeline/TimelineTrack';
 import KandaDrawer from './drawer/KandaDrawer';
 import DynamicIslandPlayer from './DynamicIslandPlayer';
 import SlokaOfTheDay from './interactive/SlokaOfTheDay';
+import { safeDynamic } from '@/lib/safeDynamic';
 
-// ── Heavy overlays: lazy-loaded on demand (Phase 1D split) ──
-const SearchModal = dynamic(() => import('./interactive/SearchModal'), { ssr: false });
-const KandaQuizModal = dynamic(() => import('./interactive/KandaQuizModal'), { ssr: false });
-const CharacterConstellation = dynamic(() => import('./interactive/CharacterConstellation'), { ssr: false });
-const BookmarkPanel = dynamic(() => import('./interactive/BookmarkPanel'), { ssr: false });
-const ReadingModeDrawer = dynamic(() => import('./interactive/ReadingModeDrawer'), { ssr: false });
-const SocialChatPanel = dynamic(() => import('./interactive/SocialChatPanelWS'), { ssr: false });
+// ── Heavy overlays: resilient lazy loading with ChunkLoadError recovery ──
+const SearchModal = safeDynamic(() => import('./interactive/SearchModal'));
+const KandaQuizModal = safeDynamic(() => import('./interactive/KandaQuizModal'));
+const CharacterConstellation = safeDynamic(() => import('./interactive/CharacterConstellation'));
+const BookmarkPanel = safeDynamic(() => import('./interactive/BookmarkPanel'));
+const ReadingModeDrawer = safeDynamic(() => import('./interactive/ReadingModeDrawer'));
+const SocialChatPanel = safeDynamic(() => import('./interactive/SocialChatPanelWS'));
+const AboutModal = safeDynamic(() => import('./interactive/AboutModal'));
 
 export default function JourneyPage() {
   const { theme, isLight, toggleTheme } = useTheme();
@@ -232,6 +234,7 @@ export default function JourneyPage() {
             onOpenSearch={() => openOverlay('search')}
             onOpenDaily={() => openQuiz('daily')}
             onOpenSaved={() => openOverlay('bookmarks')}
+            onOpenAbout={() => openOverlay('about')}
             onToggleTheme={toggleTheme}
           />
           {activeOverlay !== 'chat' && (
@@ -273,6 +276,9 @@ export default function JourneyPage() {
       )}
       {activeOverlay === 'chat' && (
         <SocialChatPanel open isLight={isLight} onClose={closeOverlay} />
+      )}
+      {activeOverlay === 'about' && (
+        <AboutModal open isLight={isLight} onClose={closeOverlay} />
       )}
     </div>
   );

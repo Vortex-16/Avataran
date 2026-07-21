@@ -87,6 +87,7 @@ export default function TimelineTrack({
                 idx={idx}
                 isLight={isLight}
                 isMobile={isMobile}
+                onOpenDrawer={onOpenDrawer}
                 isNightMode={isNightMode}
                 setIsNightMode={setIsNightMode}
                 lallaOutfit={lallaOutfit}

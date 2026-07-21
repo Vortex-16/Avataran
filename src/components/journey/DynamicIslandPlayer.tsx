@@ -22,7 +22,7 @@ const TRACKS: Track[] = [
     id: 'katha',
     title: 'Ramayana Recital',
     subtitle: 'Hum Katha Sunate',
-    url: '/audio/Hum Katha Sunate Ram Sakal Gun Dhaam Ki - SouthMelody.mp3',
+    url: '/audio/hum-katha-ram.mp3',
   },
   {
     id: 'chronicle',

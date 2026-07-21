@@ -6,36 +6,28 @@ import LoaderRamRam from '@/components/experience/LoaderRamRam';
 import HeroFilm from '@/components/experience/HeroFilm';
 import AudioDirector from '@/components/experience/AudioDirector';
 import JourneyPage from '@/components/journey/JourneyPage';
+import { auth } from '@/lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export default function ExperienceShell() {
   const { isReady, heroComplete, setReducedMotion, setHeroComplete, setUser } = useStore();
 
-  // Listen to Auth State Changes
+  // Listen to Auth State Changes (static import prevents HMR chunk 404s in dev)
   useEffect(() => {
-    let unsubscribe: (() => void) | undefined;
-    
-    const initAuthListener = async () => {
-      const { onAuthStateChanged } = await import('firebase/auth');
-      const { auth } = await import('@/lib/firebase');
-      
-      unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setUser({
-            uid: user.uid,
-            displayName: user.displayName,
-            email: user.email,
-            photoURL: user.photoURL,
-          });
-        } else {
-          setUser(null);
-        }
-      });
-    };
-    
-    initAuthListener();
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser({
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        });
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe();
   }, [setUser]);
 
   // Skip intro film on return visits
@@ -89,6 +81,26 @@ export default function ExperienceShell() {
 
         {/* 4. Fresh Immersive Journey Section */}
         {heroComplete && <JourneyPage />}
+
+        {/* 5. Dev-Only Storage Clear Utility (Automatically stripped from production builds) */}
+        {process.env.NODE_ENV === 'development' && (
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.reload();
+              }
+            }}
+            className="fixed bottom-4 left-4 z-[999] px-3 py-1.5 rounded-full bg-[#ff5e00] text-white font-body text-[10px] font-bold shadow-lg hover:bg-[#ff7900] transition-all border border-white/20 pointer-events-auto cursor-pointer flex items-center gap-1.5"
+            title="Development Mode Only: Clear LocalStorage & SessionStorage"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            <span>Clear Storage (Dev Only)</span>
+          </button>
+        )}
       </div>
     </main>
   );
